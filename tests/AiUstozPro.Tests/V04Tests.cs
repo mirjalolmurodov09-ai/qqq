@@ -61,7 +61,7 @@ public class VoiceTests
     }
 
     [Fact]
-    public void Ovoz_sozlamalari_saqlanadi_va_tekshiriladi()
+    public async Task Ovoz_sozlamalari_saqlanadi_va_tekshiriladi()
     {
         using var f = new Fixture();
         Assert.False(f.App.Voice.GetSettings().Enabled);
@@ -74,7 +74,7 @@ public class VoiceTests
         Assert.Equal("Microsoft Irina (ru-RU)", s.TtsVoice);
         Assert.Throws<BusinessRuleException>(() => f.App.Voice.SaveSettings(f.Admin, new VoiceSettings { Volume = 150 }));
         Assert.Throws<BusinessRuleException>(() => f.App.Voice.SaveSettings(f.Admin, new VoiceSettings { Language = "de" }));
-        Assert.ThrowsAsync<AiException>(() => f.App.Voice.TranscribeOpenAiAsync(f.Admin, WavEncoder.FromPcm16(new byte[100]), default));
+        await Assert.ThrowsAsync<AiException>(() => f.App.Voice.TranscribeOpenAiAsync(f.Admin, WavEncoder.FromPcm16(new byte[100]), default));
     }
 }
 
