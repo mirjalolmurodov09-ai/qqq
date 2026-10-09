@@ -43,7 +43,7 @@ public static class DatabaseMigrator
         }
     }
 
-    internal static bool TableExists(AppDbContext db, string table)
+    public static bool TableExists(AppDbContext db, string table)
     {
         var conn = db.Database.GetDbConnection();
         var wasClosed = conn.State != System.Data.ConnectionState.Open;
