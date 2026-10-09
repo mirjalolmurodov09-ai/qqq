@@ -45,6 +45,7 @@ jobs:
           Write-Host "Chiqish kodi: $($p.ExitCode)"
           $log = Get-Content (Join-Path $data "smoke-test.log") -ErrorAction SilentlyContinue
           $log
+          Write-Host "::notice title=Smoke test (.exe)::$(($log | Select-Object -Last 2) -join ' | ')"
           if ($p.ExitCode -ne 0) {
             $err = ($log | Select-Object -Last 12) -join ' | '
             Write-Host "::error title=Smoke test::$err"
