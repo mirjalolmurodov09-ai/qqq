@@ -27,6 +27,7 @@ public sealed partial class ReportsViewModel : PageViewModel
     [ObservableProperty] private bool _excel = true;
     [ObservableProperty] private bool _pdf;
     [ObservableProperty] private bool _csv;
+    [ObservableProperty] private bool _word;
     [ObservableProperty] private bool _needsGroup;
     [ObservableProperty] private bool _needsPair;
     [ObservableProperty] private bool _needsPeriod;
@@ -113,11 +114,12 @@ public sealed partial class ReportsViewModel : PageViewModel
     private void Generate()
     {
         if (Kind is null) return;
-        var fmt = Pdf ? ExportFormat.Pdf : Csv ? ExportFormat.Csv : ExportFormat.Excel;
+        var fmt = Pdf ? ExportFormat.Pdf : Csv ? ExportFormat.Csv : Word ? ExportFormat.Word : ExportFormat.Excel;
         var filter = fmt switch
         {
             ExportFormat.Pdf => "PDF (*.pdf)|*.pdf",
             ExportFormat.Csv => "CSV (*.csv)|*.csv",
+            ExportFormat.Word => "Word (*.docx)|*.docx",
             _ => "Excel (*.xlsx)|*.xlsx",
         };
         var from = Ui.ToDateOnly(From) ?? DateOnly.FromDateTime(DateTime.Today);

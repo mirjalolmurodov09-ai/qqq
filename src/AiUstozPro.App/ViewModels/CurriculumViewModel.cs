@@ -280,10 +280,9 @@ public sealed partial class CurriculumViewModel : PageViewModel
     private void Export()
     {
         if (_plan is null || SelectedPair is not { } p) return;
-        var path = Ui.SaveFile($"KTR {p.SubjectName} {p.GroupName}.xlsx", "Excel (*.xlsx)|*.xlsx|PDF (*.pdf)|*.pdf|CSV (*.csv)|*.csv");
+        var path = Ui.SaveFile($"KTR {p.SubjectName} {p.GroupName}.xlsx", ReportExporter.SaveFilter);
         if (path is null) return;
-        var fmt = path.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Pdf
-                : path.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Csv : ExportFormat.Excel;
+        var fmt = ReportExporter.FormatFromPath(path);
         if (Ui.Run(() => ReportExporter.Export(S.Reports.Curriculum(Session, _plan.Id, DateOnly.FromDateTime(DateTime.Today)), fmt, path), "KTR eksport qilindi"))
             Ui.OpenPath(path);
     }

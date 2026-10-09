@@ -54,6 +54,7 @@
                 <TextBlock Text="Format" Style="{StaticResource Label}" Margin="0,14,0,3"/>
                 <WrapPanel>
                     <RadioButton Content="Excel (.xlsx)" IsChecked="{Binding Excel}" GroupName="fmt"/>
+                    <RadioButton Content="Word (.docx)" IsChecked="{Binding Word}" GroupName="fmt"/>
                     <RadioButton Content="PDF" IsChecked="{Binding Pdf}" GroupName="fmt"/>
                     <RadioButton Content="CSV" IsChecked="{Binding Csv}" GroupName="fmt"/>
                 </WrapPanel>

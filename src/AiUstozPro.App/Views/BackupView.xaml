@@ -6,11 +6,12 @@
             <StackPanel DockPanel.Dock="Top">
                 <TextBlock Text="Zaxira nusxalar" Style="{StaticResource SectionTitle}"/>
                 <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,10"
-                           Text="Dastur har kuni birinchi ishga tushganda avtomatik zaxira nusxa oladi (oxirgi 14 tasi saqlanadi). Muhim o'zgarishlardan oldin qo'lda nusxa oling va vaqti-vaqti bilan nusxani fleshka yoki boshqa diskka saqlang."/>
+                           Text="Dastur har kuni birinchi ishga tushganda avtomatik zaxira nusxa oladi (oxirgi 14 tasi saqlanadi). Muhim o'zgarishlardan oldin qo'lda nusxa oling. Fleshka yoki boshqa diskka faqat shifrlangan nusxani (AES-256, parol bilan) saqlash tavsiya etiladi."/>
                 <TextBlock Text="{Binding Folder, StringFormat='Papka: {0}'}" Style="{StaticResource Hint}" Margin="0,0,0,10"/>
                 <WrapPanel Margin="0,0,0,12">
                     <Button Content="Zaxira nusxa olish" Style="{StaticResource PrimaryButton}" Command="{Binding CreateCommand}"/>
-                    <Button Content="Boshqa joyga saqlash…" Command="{Binding SaveCopyCommand}"/>
+                    <Button Content="Shifrlangan nusxa (parol bilan)…" Command="{Binding SaveEncryptedCommand}"/>
+                    <Button Content="Shifrsiz nusxa…" Command="{Binding SaveCopyCommand}"/>
                     <Button Content="Papkani ochish" Command="{Binding OpenFolderCommand}"/>
                     <Button Content="Tiklash…" Style="{StaticResource DangerButton}" Command="{Binding RestoreCommand}"/>
                 </WrapPanel>

@@ -14,7 +14,7 @@
                                 Visibility="{Binding HasPlan, Converter={StaticResource InvBoolToVis}}" IsEnabled="{Binding HasPairs}"/>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding HasPlan, Converter={StaticResource BoolToVis}}">
                             <Button Content="Import (Excel/CSV)" Command="{Binding ImportCommand}" IsEnabled="{Binding CanEdit}"/>
-                            <Button Content="Eksport (Excel/PDF)" Command="{Binding ExportCommand}" Margin="0"/>
+                            <Button Content="Eksport (Excel/Word/PDF)" Command="{Binding ExportCommand}" Margin="0"/>
                         </StackPanel>
                     </StackPanel>
                     <ComboBox ItemsSource="{Binding Pairs}" SelectedItem="{Binding SelectedPair}" Width="340" HorizontalAlignment="Left"/>

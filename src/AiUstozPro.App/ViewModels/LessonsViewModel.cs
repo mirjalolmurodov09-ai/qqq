@@ -234,7 +234,7 @@ public sealed partial class LessonsViewModel : PageViewModel
     private void Export()
     {
         if (SelectedPair is not { } p) return;
-        var path = Ui.SaveFile($"Dars sanalari {p.GroupName} {p.SubjectName}.xlsx", "Excel (*.xlsx)|*.xlsx|PDF (*.pdf)|*.pdf|CSV (*.csv)|*.csv");
+        var path = Ui.SaveFile($"Dars sanalari {p.GroupName} {p.SubjectName}.xlsx", ReportExporter.SaveFilter);
         if (path is null) return;
         var t = new ReportTable { Title = "Dars sanalari", Landscape = true };
         t.SubtitleLines.Add($"Guruh: {p.GroupName}");
@@ -245,8 +245,7 @@ public sealed partial class LessonsViewModel : PageViewModel
         foreach (var r in Lessons)
             t.Rows.Add(new[] { (++i).ToString(), r.Date, r.Day, r.Number.ToString(), r.Time, r.Hours.ToString(), r.Status, r.Origin, r.Topic ?? "", r.Note });
         t.FooterLines.Add(Summary);
-        var fmt = path.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Pdf
-                : path.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Csv : ExportFormat.Excel;
+        var fmt = ReportExporter.FormatFromPath(path);
         if (Ui.Run(() => ReportExporter.Export(t, fmt, path), "Eksport qilindi")) Ui.ShowInFolder(path);
     }
 }

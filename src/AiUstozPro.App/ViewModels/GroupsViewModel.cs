@@ -202,10 +202,9 @@ public sealed partial class GroupsViewModel : PageViewModel
     private void ExportStudentHistory()
     {
         if (SelectedStudent is not { } s) { Ui.Warn("O'quvchini tanlang."); return; }
-        var path = Ui.SaveFile($"{s.FullName} davomat.xlsx", "Excel (*.xlsx)|*.xlsx|PDF (*.pdf)|*.pdf|CSV (*.csv)|*.csv");
+        var path = Ui.SaveFile($"{s.FullName} davomat.xlsx", ReportExporter.SaveFilter);
         if (path is null) return;
-        var fmt = path.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Pdf
-                : path.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Csv : ExportFormat.Excel;
+        var fmt = ReportExporter.FormatFromPath(path);
         if (Ui.Run(() => ReportExporter.Export(S.Reports.StudentHistory(Session, s.Id), fmt, path), "Davomat tarixi eksport qilindi"))
             Ui.OpenPath(path);
     }

@@ -214,7 +214,7 @@ public sealed partial class TimetableViewModel : PageViewModel
     private void Export()
     {
         if (_calendarId == 0) return;
-        var path = Ui.SaveFile("Dars jadvali.xlsx", "Excel (*.xlsx)|*.xlsx|PDF (*.pdf)|*.pdf|CSV (*.csv)|*.csv");
+        var path = Ui.SaveFile("Dars jadvali.xlsx", ReportExporter.SaveFilter);
         if (path is null) return;
         var t = new ReportTable { Title = "Dars jadvali", Landscape = true };
         t.SubtitleLines.Add(CalendarInfo);
@@ -223,8 +223,7 @@ public sealed partial class TimetableViewModel : PageViewModel
         t.Widths.AddRange(new[] { 1.4f, 0.7f, 1.3f, 1.5f, 2.5f, 2.5f, 0.9f, 0.7f, 2f });
         foreach (var r in Rows)
             t.Rows.Add(new[] { r.Day, r.LessonNumber.ToString(), r.Time, r.Group, r.Subject, r.Teacher, r.Room, r.Hours.ToString(), r.Period });
-        var fmt = path.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Pdf
-                : path.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ? ExportFormat.Csv : ExportFormat.Excel;
+        var fmt = ReportExporter.FormatFromPath(path);
         if (Ui.Run(() => ReportExporter.Export(t, fmt, path), "Jadval eksport qilindi")) Ui.ShowInFolder(path);
     }
 

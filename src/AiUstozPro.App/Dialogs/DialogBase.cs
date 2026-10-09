@@ -105,3 +105,62 @@ public sealed class InputDialog : DialogBase
         return true;
     }
 }
+
+/// <summary>Parol so'rash (ixtiyoriy ravishda takrorlash bilan).</summary>
+public sealed class PasswordDialog : DialogBase
+{
+    private readonly PasswordBox _p1 = new();
+    private readonly PasswordBox _p2 = new();
+    private readonly bool _confirm;
+    private readonly TextBlock _error;
+
+    public PasswordDialog(string title, string prompt, bool confirm) : base(title, "OK")
+    {
+        _confirm = confirm;
+        Body.Children.Add(new TextBlock { Text = prompt, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 8) });
+        Add("Parol", _p1);
+        if (confirm) Add("Parolni takrorlang", _p2);
+        _error = AddErrorText();
+        Loaded += (_, _) => _p1.Focus();
+    }
+
+    public string Value => _p1.Password;
+
+    protected override bool Validate()
+    {
+        if (_p1.Password.Length < 8) { ShowError(_error, "Parol kamida 8 belgidan iborat bo'lsin."); return false; }
+        if (_confirm && _p1.Password != _p2.Password) { ShowError(_error, "Parollar mos kelmadi."); return false; }
+        return true;
+    }
+}
+
+/// <summary>AI javobini tahrirlash va o'qituvchi tasdig'i.</summary>
+public sealed class ReviewDialog : DialogBase
+{
+    private readonly TextBox _text;
+    private readonly CheckBox _checked = new() { Content = "Matnni o'qib chiqdim, faktlarni tekshirdim va to'g'riligiga javob beraman", Margin = new Thickness(0, 10, 0, 0) };
+    private readonly TextBlock _error;
+
+    public ReviewDialog(string text) : base("AI javobini tekshirish va tasdiqlash", "Tasdiqlash", 860)
+    {
+        AddHint("AI xato qilishi mumkin. Matnni tahrirlang va tekshiring. Faqat tasdiqlangan matn Word hujjatiga \"o'qituvchi tekshirgan\" belgisi bilan chiqariladi.");
+        _text = new TextBox
+        {
+            Text = text, AcceptsReturn = true, AcceptsTab = true, TextWrapping = TextWrapping.Wrap, Height = 460,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalContentAlignment = VerticalAlignment.Top,
+            FontFamily = new System.Windows.Media.FontFamily("Segoe UI"),
+        };
+        Body.Children.Add(_text);
+        Body.Children.Add(_checked);
+        _error = AddErrorText();
+    }
+
+    public string Value => _text.Text;
+
+    protected override bool Validate()
+    {
+        if (string.IsNullOrWhiteSpace(_text.Text)) { ShowError(_error, "Matn bo'sh."); return false; }
+        if (_checked.IsChecked != true) { ShowError(_error, "Tasdiqlash uchun belgini qo'ying."); return false; }
+        return true;
+    }
+}

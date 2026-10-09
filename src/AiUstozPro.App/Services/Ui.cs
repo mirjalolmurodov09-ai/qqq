@@ -97,6 +97,12 @@ public static class Ui
         return dlg.ShowDialog() == true ? dlg.Value : null;
     }
 
+    public static string? AskPassword(string title, string prompt, bool confirm)
+    {
+        var dlg = new Dialogs.PasswordDialog(title, prompt, confirm) { Owner = Owner };
+        return dlg.ShowDialog() == true ? dlg.Value : null;
+    }
+
     public static string? OpenFile(string filter)
     {
         var dlg = new OpenFileDialog { Filter = filter, CheckFileExists = true };

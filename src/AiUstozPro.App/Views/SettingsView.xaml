@@ -10,6 +10,64 @@
                     <TextBlock Style="{StaticResource Hint}" Text="Interfeys tili: o'zbek (lotin). Rus va ingliz tillari keyingi versiyalarda."/>
                 </StackPanel>
             </Border>
+            <Border Style="{StaticResource Card}" Visibility="{Binding CanManageAi, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="AI xizmati" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,6"
+                               Text="Claude yoki OpenAI — internet va pullik API kaliti kerak. Ollama — kompyuterda ishlaydigan bepul lokal model (internetsiz, lekin kuchli kompyuter talab qiladi). Model nomlari vaqt o'tishi bilan o'zgaradi — provayder hujjatlaridan tekshiring."/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Provayder" Style="{StaticResource Label}"/>
+                            <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding AiProvider}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Model" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding AiModel, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="Manzil (bo'sh qoldirilsa — standart)" Style="{StaticResource Label}"/>
+                    <TextBox Text="{Binding AiBaseUrl, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Javob uzunligi (token)" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding AiMaxTokens, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Soatlik so'rovlar limiti" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding AiHourlyLimit, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Kutish vaqti (soniya)" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding AiTimeout, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Visibility="{Binding AiNeedsKey, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="API kaliti (o'zgartirish uchun kiriting; bo'sh qoldirilsa — eskisi saqlanadi)" Style="{StaticResource Label}"/>
+                        <PasswordBox x:Name="KeyBox"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding AiKeyState}" Style="{StaticResource Hint}" Margin="0,6,0,0"/>
+                    <WrapPanel Margin="0,10,0,0">
+                        <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveAiCommand}" CommandParameter="{Binding ElementName=KeyBox}"/>
+                        <Button Content="Ulanishni tekshirish" Command="{Binding TestAiCommand}" CommandParameter="{Binding ElementName=KeyBox}"/>
+                        <Button Content="Kalitni o'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteAiKeyCommand}"/>
+                    </WrapPanel>
+                    <TextBlock Text="{Binding AiTestResult}" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                               Text="Kalit dastur fayllarida yoki bazada saqlanmaydi — Windows hisob ma'lumotlari menejerida himoyalangan. AI ishlamasa ham dasturning boshqa bo'limlari ishlayveradi."/>
+                </StackPanel>
+            </Border>
             <Border Style="{StaticResource Card}">
                 <StackPanel>
                     <TextBlock Text="Hisob" Style="{StaticResource SectionTitle}"/>

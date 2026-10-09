@@ -9,6 +9,7 @@
         Background="{DynamicResource WindowBg}" Foreground="{DynamicResource TextPrimary}">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}"><v:DashboardView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AiAssistantViewModel}"><v:AiAssistantView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:GroupsViewModel}"><v:GroupsView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:SubjectsViewModel}"><v:SubjectsView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:CalendarViewModel}"><v:CalendarView/></DataTemplate>
