@@ -43,7 +43,15 @@
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Right" Text="So'rov yuborilmoqda…" FontWeight="SemiBold"
                                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" Margin="12,0,0,0"/>
-                    <TextBlock Text="{Binding Status}" TextWrapping="Wrap"/>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Visibility="{Binding VoiceEnabled, Converter={StaticResource BoolToVis}}">
+                        <Button Content="Ovozni to'xtatish" Style="{StaticResource LinkButton}" Command="{Binding StopSpeakingCommand}"/>
+                        <Button Content="Qayta eshittirish" Style="{StaticResource LinkButton}" Command="{Binding ReplayCommand}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Status}" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Voice.Status}" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,4,0,0"
+                                   Visibility="{Binding Voice.Status, Converter={StaticResource NullToVis}}"/>
+                    </StackPanel>
                 </DockPanel>
             </Border>
 
@@ -105,6 +113,10 @@
                              Height="110" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" FontFamily="Consolas"/>
                     <DockPanel Margin="0,10,0,0">
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <Button Command="{Binding MicExtraCommand}" ToolTip="Ovoz bilan kiritish (bosing — gapiring — yana bosing)"
+                                    Visibility="{Binding VoiceEnabled, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="&#xE720; Gapirish" FontFamily="Segoe MDL2 Assets, Segoe UI"/>
+                            </Button>
                             <Button Content="To'xtatish" Command="{Binding SendCancelCommand}" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
                             <Button Content="Yuborish" Style="{StaticResource PrimaryButton}" Command="{Binding SendCommand}" Margin="0"/>
                         </StackPanel>
@@ -131,6 +143,9 @@
                                                  VerticalContentAlignment="Top" MinHeight="0"/>
                                         <DockPanel Margin="0,6,0,0" Visibility="{Binding IsAssistant, Converter={StaticResource BoolToVis}}">
                                             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                                <Button Content="O'qib berish" Style="{StaticResource LinkButton}"
+                                                        Visibility="{Binding DataContext.VoiceEnabled, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}"
+                                                        Command="{Binding DataContext.SpeakCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
                                                 <Button Content="Nusxa olish" Style="{StaticResource LinkButton}"
                                                         Command="{Binding DataContext.CopyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
                                                 <Button Content="Tekshirish va tasdiqlash" Style="{StaticResource LinkButton}"
@@ -152,6 +167,10 @@
             <Border Grid.Row="3" Style="{StaticResource Card}" Margin="0,14,0,0" Visibility="{Binding ShowNewForm, Converter={StaticResource InvBoolToVis}}">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="10,0,0,0">
+                        <Button Command="{Binding MicFollowUpCommand}" ToolTip="Ovoz bilan kiritish"
+                                Visibility="{Binding VoiceEnabled, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="&#xE720;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
                         <Button Content="To'xtatish" Command="{Binding SendFollowUpCancelCommand}" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
                         <Button Content="Yuborish" Style="{StaticResource PrimaryButton}" Command="{Binding SendFollowUpCommand}" Margin="0"/>
                     </StackPanel>

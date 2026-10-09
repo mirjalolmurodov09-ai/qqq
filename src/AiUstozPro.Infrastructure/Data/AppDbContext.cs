@@ -32,6 +32,8 @@ public class AppDbContext : DbContext
     public DbSet<TestOption> TestOptions => Set<TestOption>();
     public DbSet<TestResult> TestResults => Set<TestResult>();
     public DbSet<TestAnswer> TestAnswers => Set<TestAnswer>();
+    public DbSet<TopicMaterial> TopicMaterials => Set<TopicMaterial>();
+    public DbSet<LessonLog> LessonLogs => Set<LessonLog>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -201,6 +203,19 @@ public class AppDbContext : DbContext
             e.HasOne<TestQuestion>().WithMany().HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.Restrict);
             e.HasOne<TestOption>().WithMany().HasForeignKey(x => x.SelectedOptionId).OnDelete(DeleteBehavior.Restrict);
             e.HasIndex(x => new { x.TestResultId, x.QuestionId }).IsUnique();
+        });
+
+        b.Entity<TopicMaterial>(e =>
+        {
+            e.Property(x => x.Title).HasMaxLength(300).IsRequired();
+            e.Property(x => x.Location).IsRequired();
+            e.HasOne<CurriculumTopic>().WithMany().HasForeignKey(x => x.CurriculumTopicId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => x.CurriculumTopicId);
+        });
+        b.Entity<LessonLog>(e =>
+        {
+            e.HasOne<LessonOccurrence>().WithMany().HasForeignKey(x => x.LessonOccurrenceId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => x.LessonOccurrenceId).IsUnique();
         });
 
         b.Entity<AiMessage>(e =>

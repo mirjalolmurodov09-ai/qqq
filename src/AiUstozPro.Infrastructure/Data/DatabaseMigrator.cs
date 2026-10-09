@@ -13,7 +13,7 @@ namespace AiUstozPro.Infrastructure.Data;
 /// </summary>
 public static class DatabaseMigrator
 {
-    public const int CurrentVersion = 3;
+    public const int CurrentVersion = 4;
     public const string VersionKey = "SchemaVersion";
 
     /// <summary>Versiya N-1 → N uchun yangilash qadamlari.</summary>
@@ -23,6 +23,8 @@ public static class DatabaseMigrator
         [2] = db => CreateMissingTables(db, "AiConversations", "AiMessages"),
         // v0.3: test va baholash.
         [3] = db => CreateMissingTables(db, "Assessments", "TestQuestions", "TestOptions", "TestResults", "TestAnswers"),
+        // v0.4: dars rejimi.
+        [4] = db => CreateMissingTables(db, "TopicMaterials", "LessonLogs"),
     };
 
     /// <summary>

@@ -273,7 +273,7 @@ public class AssessmentServiceTests
         SqliteConnection.ClearAllPools();
         var up = AiUstozPro.Infrastructure.AppServices.Open(dir.Path, new AiUstozPro.Application.Ai.InMemorySecretStore());
         Assert.Equal(2, up.Migration.FromVersion);
-        Assert.Equal(3, up.Migration.ToVersion);
+        Assert.Equal(AiUstozPro.Infrastructure.Data.DatabaseMigrator.CurrentVersion, up.Migration.ToVersion);
         var s = up.Auth.Login("admin", "Admin12345").Session!;
         var subj = up.Academic.SaveSubject(s, new Subject { Name = "Fan" });
         var a = up.Tests.Save(s, new Assessment { Title = "T", SubjectId = subj.Id });

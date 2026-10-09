@@ -3,6 +3,7 @@ using AiUstozPro.Infrastructure.Ai;
 using AiUstozPro.Infrastructure.Data;
 using AiUstozPro.Infrastructure.Reports;
 using AiUstozPro.Infrastructure.Services;
+using AiUstozPro.Infrastructure.Voice;
 using Microsoft.EntityFrameworkCore;
 
 namespace AiUstozPro.Infrastructure;
@@ -39,6 +40,8 @@ public sealed class AppServices
         Secrets = secrets;
         Ai = new AiService(factory, secrets);
         Tests = new AssessmentService(factory);
+        Lessons = new LessonService(factory);
+        Voice = new VoiceService(factory, secrets, Ai);
     }
 
     public string DataDirectory { get; }
@@ -60,6 +63,8 @@ public sealed class AppServices
     public ISecretStore Secrets { get; }
     public AiService Ai { get; }
     public AssessmentService Tests { get; }
+    public LessonService Lessons { get; }
+    public VoiceService Voice { get; }
 
     public static AppServices Open(string dataDir, ISecretStore? secrets = null)
     {

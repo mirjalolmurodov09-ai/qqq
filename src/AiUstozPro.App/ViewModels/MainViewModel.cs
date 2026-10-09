@@ -59,6 +59,7 @@ public sealed partial class MainViewModel : ObservableObject
     {
         var s = AppState.RequireSession;
         NavItems.Add(NavItem.Of("Bosh sahifa", "", () => new DashboardViewModel(this)));
+        NavItems.Add(NavItem.Of("Dars rejimi", "\uE7F4", () => new LessonModeViewModel(this)));
         if (s.Can(Permission.UseAi)) NavItems.Add(NavItem.Of("AI yordamchi", "\uE99A", () => new AiAssistantViewModel()));
         NavItems.Add(NavItem.Of("Guruhlar va o'quvchilar", "", () => new GroupsViewModel()));
         NavItems.Add(NavItem.Of("Fanlar", "", () => new SubjectsViewModel()));

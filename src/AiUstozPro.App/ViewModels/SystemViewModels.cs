@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using AiUstozPro.App.Services;
 using AiUstozPro.Application.Ai;
+using AiUstozPro.Infrastructure.Voice;
 using AiUstozPro.Domain;
 using AiUstozPro.Infrastructure.Data;
 using AiUstozPro.Infrastructure.Services;
@@ -118,9 +119,84 @@ public sealed partial class SettingsViewModel : PageViewModel
 
     private bool _loading;
 
+    // ---------- Ovozli yordamchi ----------
+    public List<Choice<SttProvider>> SttChoices { get; } = new()
+    {
+        new(SttProvider.OpenAI, "OpenAI (internet, o'zbek tilini tushunadi)"),
+        new(SttProvider.Windows, "Windows (internetsiz, faqat o'rnatilgan tillar)"),
+    };
+    public List<Choice<string>> Languages { get; } = new() { new("uz", "O'zbek"), new("ru", "Rus"), new("en", "Ingliz") };
+    public ObservableCollection<string> Voices { get; } = new();
+    public VoiceController Voice => VoiceController.Instance;
+
+    [ObservableProperty] private bool _voiceEnabled;
+    [ObservableProperty] private Choice<SttProvider>? _stt;
+    [ObservableProperty] private Choice<string>? _voiceLanguage;
+    [ObservableProperty] private string? _ttsVoice;
+    [ObservableProperty] private double _voiceRate;
+    [ObservableProperty] private double _voiceVolume = 80;
+    [ObservableProperty] private string _maxRecord = "60";
+    [ObservableProperty] private string _voiceInfo = "";
+    [ObservableProperty] private string _voiceTestResult = "";
+
+    private void LoadVoice()
+    {
+        var v = S.Voice.GetSettings();
+        VoiceEnabled = v.Enabled;
+        Stt = SttChoices.First(c => c.Value == v.Stt);
+        VoiceLanguage = Languages.FirstOrDefault(l => l.Value == v.Language) ?? Languages[0];
+        Voices.Clear();
+        foreach (var x in Speaker.InstalledVoices()) Voices.Add(x);
+        TtsVoice = Voices.FirstOrDefault(x => x == v.TtsVoice) ?? Voices.FirstOrDefault();
+        VoiceRate = v.Rate; VoiceVolume = v.Volume; MaxRecord = v.MaxRecordSeconds.ToString();
+        var cultures = WindowsRecognizer.InstalledCultures();
+        VoiceInfo = $"Mikrofon: {(MicrophoneRecorder.IsAvailable ? "topildi" : "topilmadi")}. "
+            + $"O'qib berish ovozlari: {(Voices.Count == 0 ? "o'rnatilmagan" : Voices.Count + " ta")}"
+            + (Voices.Any(x => x.Contains("uz-", StringComparison.OrdinalIgnoreCase)) ? "" : " (o'zbek ovozi yo'q — matn boshqa til ovozida o'qiladi)")
+            + $". Windows nutqni aniqlash tillari: {(cultures.Count == 0 ? "yo'q" : string.Join(", ", cultures.Select(c => c.Name)))}. "
+            + $"OpenAI kaliti: {(S.Voice.HasOpenAiKey ? "bor" : "yo'q")}.";
+    }
+
+    private VoiceSettings? BuildVoice()
+    {
+        if (!int.TryParse(MaxRecord, out var mr)) { Ui.Warn("Yozuv davomiyligi butun son bo'lsin."); return null; }
+        return new VoiceSettings
+        {
+            Enabled = VoiceEnabled, Stt = Stt?.Value ?? SttProvider.OpenAI, Language = VoiceLanguage?.Value ?? "uz",
+            TtsVoice = TtsVoice, Rate = (int)Math.Round(VoiceRate), Volume = (int)Math.Round(VoiceVolume), MaxRecordSeconds = mr,
+        };
+    }
+
+    [RelayCommand]
+    private void SaveVoice()
+    {
+        var v = BuildVoice();
+        if (v is null) return;
+        Ui.Run(() => S.Voice.SaveSettings(Session, v), "Ovozli yordamchi sozlamalari saqlandi");
+    }
+
+    [RelayCommand]
+    private void TestSpeak()
+    {
+        var v = BuildVoice();
+        if (v is null) return;
+        Ui.Run(() => S.Voice.SaveSettings(Session, v));
+        Voice.Speak("Assalomu alaykum! Men AI Ustoz Pro ovozli yordamchisiman.");
+    }
+
+    [RelayCommand]
+    private async Task TestMic()
+    {
+        var v = BuildVoice();
+        if (v is null) return;
+        if (!Ui.Run(() => S.Voice.SaveSettings(Session, v))) return;
+        await Voice.ToggleAsync(t => VoiceTestResult = "Aniqlangan matn: " + t);
+    }
+
     public override void OnActivated()
     {
         IsDark = ThemeService.IsDark;
+        Ui.Run(LoadVoice);
         Ui.Run(() =>
         {
             _loading = true;
@@ -235,7 +311,7 @@ public sealed class ModuleStatus
 public sealed class AboutViewModel : PageViewModel
 {
     public override string Title => "Dastur haqida";
-    public string Version => "Versiya 0.3.0";
+    public string Version => "Versiya 0.4.0";
     public string Author => "Muallif: Murodov M., Informatika o'qituvchisi";
 
     public List<ModuleStatus> Modules { get; } = new()

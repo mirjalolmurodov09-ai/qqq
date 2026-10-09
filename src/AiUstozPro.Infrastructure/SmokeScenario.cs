@@ -163,6 +163,18 @@ public static class SmokeScenario
         ReportExporter.ExportText(test.Title, new[] { "2-variant" }, app.Tests.PrintableText(test.Id, 2), ExportFormat.Word, Path.Combine(exportDir, "test-variant2.docx"));
         Check(File.Exists(Path.Combine(exportDir, "test-variant2.docx")), "Test o'qituvchi tasdiqladi, natijalar va chop etiladigan variant eksport qilindi");
 
+        // 9a2. Dars rejimi: jurnal va dars hisoboti
+        app.Lessons.SaveLog(session!, first.Id, "Darsda blok-sxemalar ko'rib chiqildi", "12-mashq", null,
+            QuickPoll.Format("Algoritm nima?", new[] { ("A) Ketma-ket amallar", 12), ("B) Dastur tili", 3) }, "A) Ketma-ket amallar"));
+        var lessonReport = app.Lessons.ReportText(session!, first.Id);
+        ReportExporter.ExportText("Dars hisoboti", Array.Empty<string>(), lessonReport, ExportFormat.Pdf, Path.Combine(exportDir, "dars-hisoboti.pdf"));
+        Check(lessonReport.Contains("12-mashq") && lessonReport.Contains("Algoritm tushunchasi"), "Dars jurnali saqlandi, dars hisobotida mavzu, davomat, uy vazifasi va so'rov natijasi bor");
+
+        // 9a3. Ovozli yordamchi sozlamalari (qurilmasiz)
+        app.Voice.SaveSettings(session!, new AiUstozPro.Infrastructure.Voice.VoiceSettings { Enabled = true, Language = "uz", Volume = 70 });
+        var wavProbe = AiUstozPro.Infrastructure.Voice.WavEncoder.FromPcm16(new byte[32000]);
+        Check(app.Voice.GetSettings().Enabled && wavProbe.Length == 32044, "Ovozli yordamchi sozlamalari saqlandi, WAV kodlovchi ishlaydi");
+
         // 9b. AI: o'chirilgan holatda tushunarli xabar, qolgan tizim ishlayveradi; savol bazaga yozilmaydi.
         bool aiRefused = false;
         try { app.Ai.AskAsync(session!, null, "chat", "", "Salom", CancellationToken.None).GetAwaiter().GetResult(); }

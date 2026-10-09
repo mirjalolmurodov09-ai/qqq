@@ -59,11 +59,25 @@ public sealed partial class AiAssistantViewModel : PageViewModel
     private int _calendarId;
     private List<string> _studentNames = new();
 
+    public VoiceController Voice => VoiceController.Instance;
+    [ObservableProperty] private bool _voiceEnabled;
+
+    [RelayCommand]
+    private async Task MicExtra() => await Voice.ToggleAsync(t => Extra = string.IsNullOrWhiteSpace(Extra) ? t : Extra.TrimEnd() + " " + t);
+
+    [RelayCommand]
+    private async Task MicFollowUp() => await Voice.ToggleAsync(t => FollowUp = string.IsNullOrWhiteSpace(FollowUp) ? t : FollowUp.TrimEnd() + " " + t);
+
+    [RelayCommand] private void Speak(AiMessageVm? m) { if (m is not null) Voice.Speak(m.Content); }
+    [RelayCommand] private void StopSpeaking() => Voice.StopSpeaking();
+    [RelayCommand] private void Replay() => Voice.Replay();
+
     public override void OnActivated()
     {
         Ui.Run(() =>
         {
             IsEnabled = S.Ai.IsEnabled;
+            VoiceEnabled = S.Voice.GetSettings().Enabled;
             Status = S.Ai.StatusText();
             var cal = S.Calendar.GetActiveCalendar();
             _calendarId = cal?.Id ?? 0;

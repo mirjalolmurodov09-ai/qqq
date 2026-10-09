@@ -47,6 +47,20 @@ public sealed class MainWindowProbe
                     pages++;
                 }
             }
+            // Proyektor oynasi va test topshirish oynasini ham yaratib ko'ramiz.
+            var lessonVm = vm.NavItems.First(i => i.PageType == typeof(LessonModeViewModel)).Instance;
+            foreach (var mode in Enum.GetValues<PresentationMode>())
+            {
+                if (lessonVm is LessonModeViewModel lm) lm.Mode = mode;
+                var pw = new Views.PresentationWindow { DataContext = lessonVm, Left = -20000, Top = -20000, ShowActivated = false, ShowInTaskbar = false, WindowStartupLocation = WindowStartupLocation.Manual };
+                pw.Show(); pw.UpdateLayout(); DoEvents(); pw.Close();
+            }
+            var tw = new Dialogs.TestTakingWindow("Probe", "O'quvchi", 1,
+                new[] { new Dialogs.TakingQuestion("Savol?", new[] { "A", "B" }, 1) }, 1)
+                { WindowState = WindowState.Normal, Left = -20000, Top = -20000, ShowActivated = false, WindowStartupLocation = WindowStartupLocation.Manual };
+            tw.Show(); tw.UpdateLayout(); DoEvents();
+            typeof(Dialogs.TestTakingWindow).GetField("_submitted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.SetValue(tw, true);
+            tw.Close();
             w.Close();
             if (errors.Count > 0) throw new InvalidOperationException("UI xatolari:\n" + string.Join("\n", errors));
             return $"OK  Interfeys: {pages / 2} ta sahifa yorug' va qorong'i rejimda xatosiz yuklandi";

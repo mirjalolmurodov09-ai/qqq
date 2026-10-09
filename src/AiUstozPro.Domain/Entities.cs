@@ -351,3 +351,26 @@ public class TestAnswer : Entity
     public bool IsCorrect { get; set; }
     public int Points { get; set; }
 }
+
+/// <summary>Mavzuga oid material: fayl yoki havola.</summary>
+public class TopicMaterial : Entity
+{
+    public int CurriculumTopicId { get; set; }
+    public string Title { get; set; } = "";
+    /// <summary>Fayl yo'li yoki https:// havola.</summary>
+    public string Location { get; set; } = "";
+    public bool IsLink { get; set; }
+    public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+}
+
+/// <summary>Dars jurnali: o'qituvchi izohi, uy vazifasi, dars yakuni xulosasi, tezkor so'rov natijalari.</summary>
+public class LessonLog : Entity
+{
+    public int LessonOccurrenceId { get; set; }
+    public string? Notes { get; set; }
+    public string? Homework { get; set; }
+    public string? Summary { get; set; }
+    public string? PollResults { get; set; }
+    public int UpdatedByUserId { get; set; }
+    public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
+}

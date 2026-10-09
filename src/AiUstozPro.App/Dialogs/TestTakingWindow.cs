@@ -91,6 +91,7 @@ public sealed class TestTakingWindow : Window
         Content = root;
 
         _timer.Tick += (_, _) => Tick();
+        Closed += (_, _) => _timer.Stop();
         Loaded += (_, _) => { Tick(); UpdateProgress(); _timer.Start(); };
         Closing += (_, e) =>
         {

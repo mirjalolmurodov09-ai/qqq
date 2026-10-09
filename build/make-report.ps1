@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Continue'
 $lines = @()
 $lines += "# AI Ustoz Pro — yig'ish hisoboti"
 $lines += ""
-$lines += "- Versiya: 0.3.0"
+$lines += "- Versiya: 0.4.0"
 $lines += "- Yig'ilgan sana (UTC): $((Get-Date).ToUniversalTime().ToString('dd.MM.yyyy HH:mm'))"
 $lines += "- Commit: $env:GITHUB_SHA"
 $lines += "- Muhit: $([System.Environment]::OSVersion.VersionString), runner: $env:RUNNER_OS"
@@ -40,7 +40,7 @@ if ($trx) {
 }
 $lines += ""
 $lines += "## O'rnatish"
-$lines += "1. ``AiUstozPro-Setup-0.3.0.exe`` ni ishga tushiring (administrator huquqi talab qilinmaydi)."
+$lines += "1. ``AiUstozPro-Setup-0.4.0.exe`` ni ishga tushiring (administrator huquqi talab qilinmaydi)."
 $lines += "2. Yoki ``AiUstozPro.exe`` ni istalgan papkadan to'g'ridan-to'g'ri ishga tushiring (portativ)."
 $lines += "3. Birinchi ishga tushirishda administrator parolini yarating."
 $lines += ""

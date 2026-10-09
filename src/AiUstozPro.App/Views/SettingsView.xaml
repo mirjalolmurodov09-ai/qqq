@@ -70,6 +70,60 @@
             </Border>
             <Border Style="{StaticResource Card}">
                 <StackPanel>
+                    <TextBlock Text="Ovozli yordamchi" Style="{StaticResource SectionTitle}"/>
+                    <CheckBox Content="Ovozli rejimni yoqish" IsChecked="{Binding VoiceEnabled}"/>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,4,0,6"
+                               Text="Mikrofon faqat siz &quot;Gapirish&quot; tugmasini bosganingizda yoqiladi va qayta bosganingizda o'chadi. Yozuv diskka saqlanmaydi — matnga aylantirilgach o'chiriladi."/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Nutqni aniqlash" Style="{StaticResource Label}"/>
+                            <ComboBox ItemsSource="{Binding SttChoices}" SelectedItem="{Binding Stt}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Til" Style="{StaticResource Label}"/>
+                            <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding VoiceLanguage}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="Maks. yozuv (soniya)" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding MaxRecord, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="O'qib berish ovozi" Style="{StaticResource Label}"/>
+                    <ComboBox ItemsSource="{Binding Voices}" SelectedItem="{Binding TtsVoice}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Tezlik" Style="{StaticResource Label}"/>
+                            <Slider Minimum="-10" Maximum="10" Value="{Binding VoiceRate}" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Ovoz balandligi" Style="{StaticResource Label}"/>
+                            <Slider Minimum="0" Maximum="100" Value="{Binding VoiceVolume}" TickFrequency="5" IsSnapToTickEnabled="True"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding VoiceInfo}" Style="{StaticResource Hint}" Margin="0,8,0,0"/>
+                    <WrapPanel Margin="0,10,0,0">
+                        <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveVoiceCommand}"/>
+                        <Button Content="Ovozni sinash" Command="{Binding TestSpeakCommand}"/>
+                        <Button Content="Mikrofonni sinash (bosing — gapiring — yana bosing)" Command="{Binding TestMicCommand}"/>
+                    </WrapPanel>
+                    <TextBlock Text="{Binding Voice.Status}" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                    <TextBlock Text="{Binding VoiceTestResult}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
                     <TextBlock Text="Hisob" Style="{StaticResource SectionTitle}"/>
                     <TextBlock Text="{Binding UserInfo}"/>
                     <Button Content="Parolni o'zgartirish" Command="{Binding ChangePasswordCommand}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
