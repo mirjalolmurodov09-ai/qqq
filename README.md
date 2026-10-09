@@ -2,17 +2,17 @@
 
 O'qituvchi uchun Windows dasturi: o'quv kalendari, dars jadvali, dars sanalarini avtomatik hisoblash, kalendar-tematik reja (KTR), davomat va hisobotlar. Barcha ma'lumotlar o'qituvchi kompyuterida (SQLite) saqlanadi, internet talab qilinmaydi.
 
-**Joriy versiya: 0.1.0** — asosiy yadro. AI yordamchi, yuz orqali davomat va ovozli yordamchi keyingi versiyalarda (qarang: [docs/CHEKLOVLAR.md](docs/CHEKLOVLAR.md)).
+**Joriy versiya: 0.2.0** — asosiy yadro + AI yordamchi (Claude / OpenAI / lokal Ollama), Word (.docx) eksport, parol bilan shifrlangan zaxira. Yuz orqali davomat va ovozli yordamchi keyingi versiyalarda (qarang: [docs/CHEKLOVLAR.md](docs/CHEKLOVLAR.md)).
 
 ## Yuklab olish
 
 GitHub → **Actions** → oxirgi muvaffaqiyatli "Windows build va testlar" → **Artifacts** → `AiUstozPro-win-x64`:
 
-- `AiUstozPro-Setup-0.1.0.exe` — o'rnatish dasturi (administrator huquqi shart emas);
+- `AiUstozPro-Setup-0.2.0.exe` — o'rnatish dasturi (administrator huquqi shart emas);
 - `AiUstozPro.exe` — portativ versiya (o'rnatmasdan ishga tushadi);
 - `BUILD-REPORT.md` — versiya, sana, fayl hajmi, SHA256, test natijalari.
 
-`v*` teg qo'yilganda (`git tag v0.1.0 && git push --tags`) shu fayllar GitHub **Releases** sahifasiga ham joylanadi.
+`v*` teg qo'yilganda (`git tag v0.2.0 && git push --tags`) shu fayllar GitHub **Releases** sahifasiga ham joylanadi.
 
 ## Arxitektura
 
@@ -29,7 +29,7 @@ installer/                   — Inno Setup skripti
 .github/workflows/build.yml  — Windows CI: test → build → single-file publish → smoke test → installer → o'rnatish/o'chirish sinovi
 ```
 
-Texnologiyalar: .NET 10 (LTS), WPF, EF Core 10 (SQLite), CommunityToolkit.Mvvm 8.3, ClosedXML 0.104, QuestPDF 2024.12 (Community), xUnit.
+Texnologiyalar: .NET 10 (LTS), WPF, EF Core 10 (SQLite), CommunityToolkit.Mvvm 8.3, ClosedXML 0.104, Open XML SDK (Word), QuestPDF 2024.12 (Community), xUnit.
 
 ## Mahalliy ishlab chiqish
 
@@ -52,7 +52,8 @@ publish\AiUstozPro.exe --smoke-test --data-dir %TEMP%\aup-smoke
 - Har bir o'zgartirish amali rol bo'yicha tekshiriladi va audit jurnaliga yoziladi (davomat tuzatishlari — sabab bilan).
 - Davomat: bir o'quvchiga bir darsda bitta yozuv — baza darajasida UNIQUE indeks.
 - Qayta hisoblash davomat olingan, o'tilgan, tasdiqlangan, qo'lda qo'shilgan/ko'chirilgan darslarni hech qachon o'chirmaydi.
-- Har kuni avtomatik zaxira (oxirgi 14 ta), sxema yangilanishidan oldin ham zaxira olinadi.
+- Har kuni avtomatik zaxira (oxirgi 14 ta), sxema yangilanishidan oldin ham zaxira olinadi. Tashqi nusxalar AES-256-GCM bilan shifrlanadi (PBKDF2, 600 000 iteratsiya).
+- AI API kalitlari Windows Credential Manager'da saqlanadi — kodda, bazada, konfiguratsiyada emas. AI ga o'quvchi ismlari yuborilmaydi (davomat tahlili anonim), ism uchrasa ogohlantiriladi. AI javobi o'qituvchi tasdiqlamaguncha Word hujjatiga "tekshirilgan" sifatida chiqmaydi.
 
 Batafsil: [docs/FOYDALANUVCHI-QOLLANMASI.md](docs/FOYDALANUVCHI-QOLLANMASI.md), [docs/ADMINISTRATOR-QOLLANMASI.md](docs/ADMINISTRATOR-QOLLANMASI.md).
 

@@ -1,8 +1,8 @@
-# AI Ustoz Pro — foydalanuvchi qo'llanmasi (v0.1)
+# AI Ustoz Pro — foydalanuvchi qo'llanmasi (v0.2)
 
 ## 1. O'rnatish va birinchi ishga tushirish
 
-1. `AiUstozPro-Setup-0.1.0.exe` ni ishga tushiring. Administrator huquqi so'ralmaydi; dastur `%LOCALAPPDATA%\Programs\AI Ustoz Pro` ga o'rnatiladi. Windows SmartScreen "Noma'lum nashriyotchi" deb ogohlantirsa — **Batafsil → Baribir ishga tushirish** (dastur raqamli imzolanmagan, qarang: CHEKLOVLAR).
+1. `AiUstozPro-Setup-0.2.0.exe` ni ishga tushiring. Administrator huquqi so'ralmaydi; dastur `%LOCALAPPDATA%\Programs\AI Ustoz Pro` ga o'rnatiladi. Windows SmartScreen "Noma'lum nashriyotchi" deb ogohlantirsa — **Batafsil → Baribir ishga tushirish** (dastur raqamli imzolanmagan, qarang: CHEKLOVLAR).
 2. Birinchi ishga tushirishda **administrator hisobini** yarating: F.I.Sh., login (lotin harflari) va parol (kamida 8 belgi, harf va raqam).
 3. Bosh sahifadagi **"Ishni boshlash uchun"** ro'yxati qadamlarni ko'rsatadi.
 
@@ -57,11 +57,29 @@ Ranglar: yashil — o'tilgan, sariq — rejadan ortda, qizil — dars sanasi yet
 - **Davomat jurnali** — o'quvchilar × sanalar, jami va foiz; kunlik/haftalik/oylik/yillik davr tugmalari.
 - **KTR: reja va amaliyot** — oylar kesimi, o'tilgan/qolgan soatlar, rejadan ortda qolish.
 - **Darslar statistikasi**, **Audit jurnali** (administrator).
-- Formatlar: Excel (.xlsx), PDF, CSV (UTF-8). Sana formati — dd.MM.yyyy.
+- Formatlar: Excel (.xlsx), Word (.docx), PDF, CSV (UTF-8). Sana formati — dd.MM.yyyy.
 - O'quvchi davomati tarixi — "Guruhlar va o'quvchilar" sahifasidagi **Davomat tarixi** tugmasi.
 
+### 2.8. AI yordamchi
+**Sozlash (administrator):** Sozlamalar → AI xizmati.
+- *Claude (Anthropic)* yoki *OpenAI* — internet va API kaliti kerak (provayder saytida olinadi, pullik). Kalitni maydonga kiriting → **Saqlash** → **Ulanishni tekshirish**.
+- *Lokal model (Ollama)* — ollama.com dan Ollama o'rnating, `ollama pull llama3.1` buyrug'i bilan model yuklang. Internet va kalit kerak emas, lekin kompyuter kuchli bo'lishi kerak (kamida 8–16 GB operativ xotira).
+- **Soatlik limit** — bir soatda nechta so'rov yuborish mumkinligi (xarajatni nazorat qilish uchun).
+
+**Ishlatish:** chap menyuda **AI yordamchi**.
+1. Topshiriqni tanlang: mavzuni tushuntirish, dars ishlanmasi, maqsad va natijalar, test, turli darajadagi savollar, amaliy topshiriqlar, individual mashqlar, kodni tushuntirish/tekshirish, taqdimot rejasi, dars yakuni xulosasi, o'zlashtirish tahlili yoki erkin savol.
+2. Guruh va fanni tanlasangiz, **KTR mavzulari** ro'yxatidan mavzu tanlash mumkin — soat, turi va kutilayotgan natija avtomatik qo'shiladi.
+3. **Yuborish**. Javob kelgach, shu suhbatda aniqlashtiruvchi savol berishingiz mumkin.
+4. **Tekshirish va tasdiqlash** — javobni tahrirlang va tasdiqlang. **Word'ga saqlash** faqat tasdiqlangan javob uchun ishlaydi; hujjatda "AI yordamida tayyorlandi, o'qituvchi tekshirdi" belgisi bo'ladi.
+
+**Maxfiylik:** O'quvchilarning ism-familiyasini AI ga yozmang — matnda o'quvchi ismi uchrasa, dastur ogohlantiradi. "O'zlashtirish tahlili"da **Davomat ma'lumotini qo'shish (anonim)** tugmasi ismlarsiz statistikani (O'quvchi 1, 2, …) qo'shadi.
+
+AI ishlamasa (internet yo'q, kalit noto'g'ri), dastur tushunarli xabar beradi — qolgan barcha bo'limlar odatdagidek ishlaydi.
+
 ## 3. Zaxira nusxa
-Dastur har kuni avtomatik nusxa oladi. **Zaxira nusxalar** bo'limida (administrator) qo'lda nusxa olish, fleshkaga saqlash va tiklash mumkin. Tiklashdan oldin joriy holat avtomatik saqlanadi.
+Dastur har kuni avtomatik nusxa oladi. **Zaxira nusxalar** bo'limida (administrator):
+- **Shifrlangan nusxa (parol bilan)** — fleshka yoki boshqa joyga olib chiqish uchun tavsiya etiladi (AES-256). Parolni unutmang: usiz nusxani tiklab bo'lmaydi.
+- **Tiklash** — oddiy (.db) yoki shifrlangan (.aupbak) nusxadan. Shifrlangan nusxa uchun parol so'raladi. Tiklashdan oldin joriy holat avtomatik saqlanadi.
 
 ## 4. Muammolar
 - Xato chiqsa, xabarda jurnal fayli yo'li ko'rsatiladi: `%LOCALAPPDATA%\AiUstozPro\logs`.

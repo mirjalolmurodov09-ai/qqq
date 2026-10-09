@@ -1,23 +1,25 @@
-# Ma'lum cheklovlar va keyingi bosqichlar (v0.1)
+# Ma'lum cheklovlar va keyingi bosqichlar (v0.2)
 
-v0.1 — texnik topshiriqning **asosiy yadrosi**: kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, dars jadvali, sanalarni avtomatik hisoblash, KTR, qo'lda davomat, hisobotlar, zaxira. Quyidagilar ataylab keyingi bosqichlarga qoldirilgan va dasturda **ishlaydigandek ko'rsatilmagan**.
+v0.2 — asosiy yadro (kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, dars jadvali, sanalarni avtomatik hisoblash, KTR, qo'lda davomat, hisobotlar, zaxira) + AI yordamchi, Word eksport va shifrlangan zaxira. Quyidagilar ataylab keyingi bosqichlarga qoldirilgan va dasturda **ishlaydigandek ko'rsatilmagan**.
 
 ## Hali bajarilmagan modullar
 | Modul | Holat | Izoh |
 |---|---|---|
-| AI yordamchi (TZ 11) | v0.2 | Sozlanadigan provayder: Claude API, OpenAI, lokal Ollama. Kalit Windows Credential Manager'da. AI natijalari o'qituvchi tasdiqlamaguncha rasmiy hujjatlarga tushmaydi. |
 | Yuz orqali davomat (TZ 7) | v0.3 | Quyidagi huquqiy talablar hal qilingandan keyin. Natija har doim o'qituvchi tasdiqlaydigan "nomzod" bo'ladi. |
 | Ovozli yordamchi (TZ 12) | v0.4 | Windows nutq API orqali; doimiy yozib olishsiz. |
 | Test va baholash (TZ 14) | v0.3 | |
 | Darsni boshqarish, lokal tarmoq (TZ 13) | Rejada | O'quvchi kompyuterlarida alohida agent kerak. |
-| Word (.docx) eksport | v0.2 | Hozir Excel, PDF, CSV. |
 | Rus/ingliz interfeysi, PostgreSQL | Rejada | |
 
 ## Texnik cheklovlar
-- **Zaxira fayllari shifrlanmagan.** v0.2 da parol bilan AES-256 shifrlash rejalashtirilgan. Hozircha nusxalarni ishonchli joyda saqlang.
+- **Avtomatik kunlik zaxiralar** foydalanuvchi profilida shifrsiz saqlanadi (Windows hisob huquqlari bilan himoyalangan). Fleshka yoki boshqa joyga faqat **shifrlangan nusxa** (Zaxira nusxalar → "Shifrlangan nusxa") olib chiqing. Parol unutilsa, shifrlangan nusxani tiklab bo'lmaydi.
+- **AI yordamchi haqiqiy Claude / OpenAI / Ollama serverlarida sinalmagan**: CI muhitida internet va API kaliti yo'q, shuning uchun so'rov formati va javoblarni o'qish soxta server javoblari bilan tekshirilgan. Birinchi ishlatishda Sozlamalar → AI xizmati → **Ulanishni tekshirish** tugmasini bosing.
+- **AI xarajati**: Claude va OpenAI pullik. Soatlik so'rovlar limiti (standart 30) xarajatni cheklaydi; narxlarni provayder saytidan tekshiring.
+- **AI javoblari xato bo'lishi mumkin.** Dastur ularni "tekshirilmagan" deb belgilaydi; Word ga "o'qituvchi tekshirgan" belgisi bilan faqat tasdiqlangan matn chiqadi.
+- AI javoblari oqim (streaming) bilan emas, to'liq tayyor bo'lgach ko'rsatiladi; uzun javob 30–90 soniya olishi mumkin.
 - **Ma'lumotlar bazasi fayli shifrlanmagan** (Windows foydalanuvchi profili huquqlari bilan himoyalangan). Umumiy kompyuterda har bir o'qituvchi alohida Windows hisobidan foydalanishi tavsiya etiladi.
 - **Dastur raqamli imzolanmagan** — Windows SmartScreen ogohlantirishi mumkin. Kod imzolash sertifikati (Authenticode) olinsa, CI ga qo'shiladi.
-- **Sxema migratsiyalari** EF Core migratsiya fayllari o'rniga versiyalangan SQL qadamlar bilan boshqariladi (`DatabaseMigrator`). Sababi: loyiha `dotnet ef` vositasini ishlatib bo'lmaydigan muhitda yozildi. Har bir yangilashdan oldin avtomatik zaxira olinadi.
+- **Sxema migratsiyalari** EF Core migratsiya fayllari o'rniga versiyalangan qadamlar bilan boshqariladi (`DatabaseMigrator`): yangi jadvallar EF modelidan yaratiladigan skriptdan olinadi, shuning uchun model bilan farq qilmaydi. v1 → v2 yangilanishi testda tekshirilgan. Har bir yangilashdan oldin avtomatik zaxira olinadi.
 - **Qorong'i rejim**: kiritish maydonlari (matn, ro'yxat, sana) o'qilishi uchun ataylab yorug' fonda qoladi.
 - **Interfeysning qo'lda sinovi**: CI har bir sahifani ikkala rejimda ochib, XAML/bog'lanish xatolarini tekshiradi, lekin tugmalarni bosib ko'rmaydi. Haqiqiy foydalanuvchi sinovi (o'qituvchi tomonidan) talab qilinadi.
 - **Bayramlar**: faqat sanasi qonunda qat'iy belgilangan bayramlar taklif qilinadi. Hayitlar va har yilgi qo'shimcha dam olish kunlari qo'lda kiritiladi.
