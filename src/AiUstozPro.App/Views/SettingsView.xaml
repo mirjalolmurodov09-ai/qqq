@@ -1,0 +1,36 @@
+<UserControl x:Class="AiUstozPro.App.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="760" HorizontalAlignment="Left">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Ko'rinish" Style="{StaticResource SectionTitle}"/>
+                    <CheckBox Content="Qorong'i rejim" IsChecked="{Binding IsDark}"/>
+                    <TextBlock Style="{StaticResource Hint}" Text="Interfeys tili: o'zbek (lotin). Rus va ingliz tillari keyingi versiyalarda."/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Hisob" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="{Binding UserInfo}"/>
+                    <Button Content="Parolni o'zgartirish" Command="{Binding ChangePasswordCommand}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Ma'lumotlar" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="Baza fayli:" Style="{StaticResource Label}"/>
+                    <TextBlock Text="{Binding DatabasePath}" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding SchemaVersion}" Style="{StaticResource Hint}" Margin="0,6,0,0"/>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,6,0,0"
+                               Text="Ma'lumotlar foydalanuvchi profilida saqlanadi va dasturni yangilash yoki o'chirishda o'chirilmaydi. Internet talab qilinmaydi."/>
+                    <WrapPanel Margin="0,10,0,0">
+                        <Button Content="Ma'lumotlar papkasi" Command="{Binding OpenDataFolderCommand}"/>
+                        <Button Content="Xatolar jurnali" Command="{Binding OpenLogFolderCommand}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

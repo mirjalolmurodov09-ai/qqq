@@ -1,0 +1,39 @@
+<UserControl x:Class="AiUstozPro.App.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="820" HorizontalAlignment="Left">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="AI Ustoz Pro" Style="{StaticResource PageTitle}"/>
+                    <TextBlock Text="{Binding Version}" Style="{StaticResource Hint}"/>
+                    <TextBlock Text="{Binding Author}" Margin="0,8,0,0"/>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                               Text="O'qituvchining dars jadvali, o'quv kalendari, kalendar-tematik rejasi, davomati va hisobotlarini bir joyda yuritish uchun dastur. Barcha ma'lumotlar shu kompyuterda saqlanadi."/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Modullar holati" Style="{StaticResource SectionTitle}"/>
+                    <ItemsControl ItemsSource="{Binding Modules}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,4">
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding State}" Style="{StaticResource Hint}" Margin="16,0,0,0"/>
+                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Ishlatilgan ochiq kutubxonalar" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource Hint}"
+                               Text=".NET 10 va WPF (MIT), Entity Framework Core va SQLite (MIT / jamoat mulki), CommunityToolkit.Mvvm (MIT), ClosedXML (MIT), QuestPDF (Community litsenziyasi — yillik daromadi 1 mln AQSh dollaridan kam tashkilotlar va shaxslar uchun bepul)."/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

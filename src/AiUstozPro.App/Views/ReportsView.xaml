@@ -1,0 +1,70 @@
+<UserControl x:Class="AiUstozPro.App.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Border Style="{StaticResource Card}" MaxWidth="760" HorizontalAlignment="Left">
+            <StackPanel>
+                <TextBlock Text="Hisobot tayyorlash" Style="{StaticResource SectionTitle}"/>
+                <TextBlock Text="Hisobot turi" Style="{StaticResource Label}"/>
+                <ComboBox ItemsSource="{Binding Kinds}" SelectedItem="{Binding Kind}"/>
+                <Border Style="{StaticResource InfoBanner}" Margin="0,10,0,0">
+                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                </Border>
+
+                <Grid Visibility="{Binding NeedsGroup, Converter={StaticResource BoolToVis}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Guruh" Style="{StaticResource Label}"/>
+                        <ComboBox ItemsSource="{Binding Groups}" SelectedItem="{Binding Group}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Fan" Style="{StaticResource Label}"/>
+                        <ComboBox ItemsSource="{Binding Subjects}" SelectedItem="{Binding Subject}"/>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Visibility="{Binding NeedsPair, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Guruh va fan" Style="{StaticResource Label}"/>
+                    <ComboBox ItemsSource="{Binding Pairs}" SelectedItem="{Binding Pair}"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding NeedsPeriod, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Davr" Style="{StaticResource Label}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker SelectedDate="{Binding From}"/>
+                        <DatePicker Grid.Column="2" SelectedDate="{Binding To}"/>
+                    </Grid>
+                    <WrapPanel Margin="0,8,0,0">
+                        <Button Content="Bugun" Command="{Binding TodayCommand}"/>
+                        <Button Content="Bu hafta" Command="{Binding ThisWeekCommand}"/>
+                        <Button Content="Bu oy" Command="{Binding ThisMonthCommand}"/>
+                        <Button Content="O'quv yili" Command="{Binding WholeYearCommand}"/>
+                    </WrapPanel>
+                </StackPanel>
+
+                <TextBlock Text="Format" Style="{StaticResource Label}" Margin="0,14,0,3"/>
+                <WrapPanel>
+                    <RadioButton Content="Excel (.xlsx)" IsChecked="{Binding Excel}" GroupName="fmt"/>
+                    <RadioButton Content="PDF" IsChecked="{Binding Pdf}" GroupName="fmt"/>
+                    <RadioButton Content="CSV" IsChecked="{Binding Csv}" GroupName="fmt"/>
+                </WrapPanel>
+                <WrapPanel Margin="0,16,0,0">
+                    <Button Content="Tayyorlash va saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding GenerateCommand}"/>
+                    <Button Content="Papkani ochish" Command="{Binding OpenFolderCommand}"/>
+                </WrapPanel>
+                <TextBlock Text="{Binding LastFile}" Style="{StaticResource Hint}" Margin="0,10,0,0"/>
+                <TextBlock Style="{StaticResource Hint}" Margin="0,10,0,0"
+                           Text="Barcha hisobotlarda sana dd.MM.yyyy formatida. CSV fayllar UTF-8 kodlashda saqlanadi, Excel ularni o'zbekcha belgilar bilan to'g'ri ochadi."/>
+            </StackPanel>
+        </Border>
+    </ScrollViewer>
+</UserControl>

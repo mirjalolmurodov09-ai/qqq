@@ -1,0 +1,179 @@
+<UserControl x:Class="AiUstozPro.App.Views.CalendarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel IsEnabled="{Binding CanEdit}">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="O'quv yili" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock Text="{Binding CalendarInfo}" Style="{StaticResource Hint}"/>
+                        <TextBlock Text="Nomi" Style="{StaticResource Label}"/>
+                        <TextBox Text="{Binding CalendarName, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Boshlanishi" Style="{StaticResource Label}"/>
+                                <DatePicker SelectedDate="{Binding StartDate}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Tugashi" Style="{StaticResource Label}"/>
+                                <DatePicker SelectedDate="{Binding EndDate}"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Text="Ish (dars) kunlari" Style="{StaticResource Label}"/>
+                        <WrapPanel>
+                            <CheckBox Content="Du" IsChecked="{Binding Mon}"/>
+                            <CheckBox Content="Se" IsChecked="{Binding Tue}"/>
+                            <CheckBox Content="Cho" IsChecked="{Binding Wed}"/>
+                            <CheckBox Content="Pa" IsChecked="{Binding Thu}"/>
+                            <CheckBox Content="Ju" IsChecked="{Binding Fri}"/>
+                            <CheckBox Content="Sha" IsChecked="{Binding Sat}"/>
+                            <CheckBox Content="Ya" IsChecked="{Binding Sun}"/>
+                        </WrapPanel>
+                        <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCalendarCommand}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Semestr / chorak chegaralari" Style="{StaticResource SectionTitle}"/>
+                        <DataGrid ItemsSource="{Binding Terms}" SelectedItem="{Binding SelectedTerm}" IsReadOnly="True" MaxHeight="180">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Nomi" Binding="{Binding Name}" Width="*"/>
+                                <DataGridTextColumn Header="Boshi" Binding="{Binding StartDate, Converter={StaticResource DateFmt}}" Width="90"/>
+                                <DataGridTextColumn Header="Oxiri" Binding="{Binding EndDate, Converter={StaticResource DateFmt}}" Width="90"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <TextBlock Text="Nomi (masalan, 1-semestr)" Style="{StaticResource Label}"/>
+                        <TextBox Text="{Binding TermName, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Boshlanishi" Style="{StaticResource Label}"/>
+                                <DatePicker SelectedDate="{Binding TermStart}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Tugashi" Style="{StaticResource Label}"/>
+                                <DatePicker SelectedDate="{Binding TermEnd}"/>
+                            </StackPanel>
+                        </Grid>
+                        <WrapPanel Margin="0,10,0,0">
+                            <Button Content="Qo'shish" Command="{Binding AddTermCommand}"/>
+                            <Button Content="O'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteTermCommand}" Margin="0"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Qat'iy bayramlarni qo'shish" Command="{Binding AddFixedHolidaysCommand}" Margin="0" IsEnabled="{Binding CanEdit}"/>
+                    <TextBlock Text="Bayramlar, ta'tillar va istisnolar" Style="{StaticResource SectionTitle}" VerticalAlignment="Center" Margin="0"/>
+                </DockPanel>
+                <Border Grid.Row="1" Style="{StaticResource WarnBanner}" Margin="0,10,0,10">
+                    <TextBlock Text="{Binding VariableNotice}" TextWrapping="Wrap"/>
+                </Border>
+                <DataGrid Grid.Row="2" ItemsSource="{Binding Exceptions}" SelectedItem="{Binding SelectedException}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Turi" Binding="{Binding Kind}" Width="150"/>
+                        <DataGridTextColumn Header="Sana" Binding="{Binding Dates}" Width="190"/>
+                        <DataGridTextColumn Header="Nomi" Binding="{Binding Title}" Width="*"/>
+                        <DataGridTextColumn Header="Kimga" Binding="{Binding Scope}" Width="130"/>
+                        <DataGridTextColumn Header="Ishlaydi" Binding="{Binding WorksAs}" Width="130"/>
+                        <DataGridTextColumn Header="Tasdiq" Binding="{Binding Confirmed}" Width="60"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Border Grid.Row="3" Background="{DynamicResource SurfaceAltBg}" CornerRadius="6" Padding="12" Margin="0,12,0,0" IsEnabled="{Binding CanEdit}">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Turi" Style="{StaticResource Label}"/>
+                                <ComboBox ItemsSource="{Binding Kinds}" SelectedItem="{Binding ExKind}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Sana (boshlanishi)" Style="{StaticResource Label}"/>
+                                <DatePicker SelectedDate="{Binding ExStart}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Visibility="{Binding ExIsVacation, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="Tugashi" Style="{StaticResource Label}"/>
+                                <DatePicker SelectedDate="{Binding ExEnd}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Visibility="{Binding ExIsTransfer, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="Qaysi kun jadvali" Style="{StaticResource Label}"/>
+                                <ComboBox ItemsSource="{Binding Days}" SelectedItem="{Binding ExWorksAs}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="6">
+                                <TextBlock Text="Nomi / sababi" Style="{StaticResource Label}"/>
+                                <TextBox Text="{Binding ExTitle, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Guruh" Style="{StaticResource Label}"/>
+                                <ComboBox ItemsSource="{Binding GroupChoices}" SelectedItem="{Binding ExGroup}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Fan" Style="{StaticResource Label}"/>
+                                <ComboBox ItemsSource="{Binding SubjectChoices}" SelectedItem="{Binding ExSubject}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="Manba (masalan, qaror raqami)" Style="{StaticResource Label}"/>
+                                <TextBox Text="{Binding ExSource, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+                        <DockPanel Margin="0,10,0,0">
+                            <CheckBox Content="Rasmiy manba bo'yicha tasdiqlangan" IsChecked="{Binding ExConfirmed}" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveExceptionCommand}"/>
+                                <Button Content="Yangi" Command="{Binding NewExceptionCommand}"/>
+                                <Button Content="O'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteExceptionCommand}" Margin="0"/>
+                            </StackPanel>
+                        </DockPanel>
+                        <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                                   Text="Ko'chirilgan ish kuni — dam olish kunida boshqa hafta kuni jadvali bo'yicha dars o'tiladi. Guruh yoki fan tanlansa, istisno faqat ularga tegishli bo'ladi."/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

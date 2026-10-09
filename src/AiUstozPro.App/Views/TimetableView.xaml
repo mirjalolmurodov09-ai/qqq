@@ -1,0 +1,137 @@
+<UserControl x:Class="AiUstozPro.App.Views.TimetableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="Wrap" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="2,4"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="320"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource Card}" Margin="0">
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Content="Import (Excel/CSV)" Command="{Binding ImportCommand}" IsEnabled="{Binding CanEdit}"/>
+                        <Button Content="Eksport" Command="{Binding ExportCommand}" Margin="0"/>
+                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding FilterGroups}" SelectedItem="{Binding FilterGroup}" Width="220" HorizontalAlignment="Left"/>
+                </DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="{Binding CalendarInfo}" Style="{StaticResource Hint}" Margin="0,0,0,8"/>
+                <TabControl Background="Transparent" BorderBrush="{DynamicResource BorderBrush}">
+                    <TabItem Header="Haftalik ko'rinish">
+                        <DataGrid ItemsSource="{Binding Week}" IsReadOnly="True" RowHeight="NaN" Margin="0,6,0,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Dars" Binding="{Binding LessonNumber}" Width="50"/>
+                                <DataGridTextColumn Header="Dushanba" Binding="{Binding Mon}" Width="*" ElementStyle="{StaticResource Wrap}"/>
+                                <DataGridTextColumn Header="Seshanba" Binding="{Binding Tue}" Width="*" ElementStyle="{StaticResource Wrap}"/>
+                                <DataGridTextColumn Header="Chorshanba" Binding="{Binding Wed}" Width="*" ElementStyle="{StaticResource Wrap}"/>
+                                <DataGridTextColumn Header="Payshanba" Binding="{Binding Thu}" Width="*" ElementStyle="{StaticResource Wrap}"/>
+                                <DataGridTextColumn Header="Juma" Binding="{Binding Fri}" Width="*" ElementStyle="{StaticResource Wrap}"/>
+                                <DataGridTextColumn Header="Shanba" Binding="{Binding Sat}" Width="*" ElementStyle="{StaticResource Wrap}"/>
+                                <DataGridTextColumn Header="Yakshanba" Binding="{Binding Sun}" Width="*" ElementStyle="{StaticResource Wrap}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Ro'yxat (tahrirlash)">
+                        <DataGrid ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow}" IsReadOnly="True" Margin="0,6,0,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Kun" Binding="{Binding Day}" Width="100"/>
+                                <DataGridTextColumn Header="Dars" Binding="{Binding LessonNumber}" Width="50"/>
+                                <DataGridTextColumn Header="Vaqt" Binding="{Binding Time}" Width="100"/>
+                                <DataGridTextColumn Header="Guruh" Binding="{Binding Group}" Width="*"/>
+                                <DataGridTextColumn Header="Fan" Binding="{Binding Subject}" Width="*"/>
+                                <DataGridTextColumn Header="O'qituvchi" Binding="{Binding Teacher}" Width="*"/>
+                                <DataGridTextColumn Header="Xona" Binding="{Binding Room}" Width="70"/>
+                                <DataGridTextColumn Header="Soat" Binding="{Binding Hours}" Width="50"/>
+                                <DataGridTextColumn Header="Davr" Binding="{Binding Period}" Width="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                </TabControl>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0" IsEnabled="{Binding CanEdit}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Jadval yozuvi" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="Guruh" Style="{StaticResource Label}"/>
+                    <ComboBox ItemsSource="{Binding Groups}" SelectedItem="{Binding FormGroup}" DisplayMemberPath="Name"/>
+                    <TextBlock Text="Fan" Style="{StaticResource Label}"/>
+                    <ComboBox ItemsSource="{Binding Subjects}" SelectedItem="{Binding FormSubject}" DisplayMemberPath="Name"/>
+                    <TextBlock Text="O'qituvchi" Style="{StaticResource Label}"/>
+                    <ComboBox ItemsSource="{Binding Teachers}" SelectedItem="{Binding FormTeacher}" DisplayMemberPath="FullName"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="90"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Hafta kuni" Style="{StaticResource Label}"/>
+                            <ComboBox ItemsSource="{Binding Days}" SelectedItem="{Binding FormDay}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Dars №" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormLessonNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Boshlanishi" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormStart, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Tugashi" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormEnd, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Xona" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormRoom, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Akademik soat" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormHours, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="Amal qilish davri (ixtiyoriy, masalan semestr)" Style="{StaticResource Label}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker SelectedDate="{Binding FormValidFrom}"/>
+                        <DatePicker Grid.Column="2" SelectedDate="{Binding FormValidTo}"/>
+                    </Grid>
+                    <WrapPanel Margin="0,12,0,0">
+                        <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveEntryCommand}"/>
+                        <Button Content="Yangi" Command="{Binding NewEntryCommand}"/>
+                        <Button Content="O'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteEntryCommand}" Margin="0"/>
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,10,0,0"
+                               Text="Bir vaqtda bir o'qituvchi, xona yoki guruh band bo'lsa, dastur ogohlantiradi. Jadval o'zgargach, dars sanalarini qayta hisoblang — mavjud davomat va tasdiqlangan darslar o'chirilmaydi."/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

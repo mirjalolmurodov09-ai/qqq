@@ -31,14 +31,21 @@ public static class ReportExporter
         var dir = Path.GetDirectoryName(Path.GetFullPath(path));
         if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
         // Avval vaqtinchalik faylga yozamiz — xato bo'lsa mavjud fayl buzilmaydi.
-        var tmp = path + ".tmp";
+        var tmp = Path.Combine(dir ?? "", $"~{Path.GetFileNameWithoutExtension(path)}-{Guid.NewGuid():N}{Extension(format)}");
         switch (format)
         {
             case ExportFormat.Excel: ToExcel(table, tmp); break;
             case ExportFormat.Csv: ToCsv(table, tmp); break;
             case ExportFormat.Pdf: ToPdf(table, tmp); break;
         }
-        File.Move(tmp, path, overwrite: true);
+        try
+        {
+            File.Move(tmp, path, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(tmp)) File.Delete(tmp);
+        }
     }
 
     public static void ToCsv(ReportTable t, string path)

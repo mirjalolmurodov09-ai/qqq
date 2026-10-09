@@ -1,0 +1,95 @@
+<UserControl x:Class="AiUstozPro.App.Views.LessonsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" IsEnabled="{Binding CanEdit}">
+                        <Button Content="Hisoblash (ko'rib chiqish)" Command="{Binding CalculateCommand}"/>
+                        <Button Content="Tasdiqlash va saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding ApplyCommand}" Margin="0"/>
+                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding Pairs}" SelectedItem="{Binding SelectedPair}" Width="340" HorizontalAlignment="Left"/>
+                </DockPanel>
+                <TextBlock Text="{Binding Info}" Style="{StaticResource Hint}" Margin="0,10,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Card}" Margin="0">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Months}" SelectedItem="{Binding SelectedMonth}" Width="180"/>
+                        <TextBlock Text="Darslar" Style="{StaticResource SectionTitle}" VerticalAlignment="Center" Margin="0"/>
+                    </DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding Summary}" Style="{StaticResource Hint}" Margin="0,0,0,8"/>
+                    <WrapPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" IsEnabled="{Binding CanEdit}">
+                        <Button Content="O'tildi / o'tilmadi" Command="{Binding ToggleConductedCommand}"/>
+                        <Button Content="Bekor qilish" Command="{Binding CancelCommand}"/>
+                        <Button Content="Tiklash" Command="{Binding RestoreCommand}"/>
+                        <Button Content="Boshqa kunga ko'chirish" Command="{Binding MoveCommand}"/>
+                        <Button Content="Qo'shimcha dars" Command="{Binding AddExtraCommand}"/>
+                        <Button Content="O'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteCommand}"/>
+                        <Button Content="Eksport" Command="{Binding ExportCommand}"/>
+                    </WrapPanel>
+                    <DataGrid ItemsSource="{Binding Lessons}" SelectedItem="{Binding SelectedLesson}" IsReadOnly="True">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCancelled}" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+                                        <Setter Property="FontStyle" Value="Italic"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Sana" Binding="{Binding Date}" Width="95"/>
+                            <DataGridTextColumn Header="Kun" Binding="{Binding Day}" Width="95"/>
+                            <DataGridTextColumn Header="Dars" Binding="{Binding Number}" Width="45"/>
+                            <DataGridTextColumn Header="Vaqt" Binding="{Binding Time}" Width="95"/>
+                            <DataGridTextColumn Header="Holat" Binding="{Binding Status}" Width="120"/>
+                            <DataGridTextColumn Header="Turi" Binding="{Binding Origin}" Width="130"/>
+                            <DataGridTextColumn Header="Mavzu" Binding="{Binding Topic}" Width="*"/>
+                            <DataGridTextColumn Header="Izoh" Binding="{Binding Note}" Width="160"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource Card}" Margin="16,0,0,0" Width="520"
+                    Visibility="{Binding HasPreview, Converter={StaticResource BoolToVis}}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Hisoblash natijasi (hali saqlanmagan)" Style="{StaticResource SectionTitle}"/>
+                    <Border DockPanel.Dock="Top" Style="{StaticResource InfoBanner}">
+                        <TextBlock Text="{Binding PreviewSummary}" TextWrapping="Wrap"/>
+                    </Border>
+                    <DataGrid ItemsSource="{Binding Preview}" IsReadOnly="True" RowHeight="NaN">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Sana" Binding="{Binding Date}" Width="90"/>
+                            <DataGridTextColumn Header="Kun" Binding="{Binding Day}" Width="85"/>
+                            <DataGridTextColumn Header="№" Binding="{Binding Number}" Width="35"/>
+                            <DataGridTextColumn Header="Natija" Binding="{Binding Action}" Width="110"/>
+                            <DataGridTextColumn Header="Izoh" Binding="{Binding Note}" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextWrapping" Value="Wrap"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

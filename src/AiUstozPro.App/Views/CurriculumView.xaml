@@ -1,0 +1,142 @@
+<UserControl x:Class="AiUstozPro.App.Views.CurriculumView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Content="KTR yaratish" Style="{StaticResource PrimaryButton}" Command="{Binding CreatePlanCommand}" Margin="0"
+                                Visibility="{Binding HasPlan, Converter={StaticResource InvBoolToVis}}" IsEnabled="{Binding HasPairs}"/>
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding HasPlan, Converter={StaticResource BoolToVis}}">
+                            <Button Content="Import (Excel/CSV)" Command="{Binding ImportCommand}" IsEnabled="{Binding CanEdit}"/>
+                            <Button Content="Eksport (Excel/PDF)" Command="{Binding ExportCommand}" Margin="0"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <ComboBox ItemsSource="{Binding Pairs}" SelectedItem="{Binding SelectedPair}" Width="340" HorizontalAlignment="Left"/>
+                </DockPanel>
+                <TextBlock Text="{Binding Info}" Style="{StaticResource Hint}" Margin="0,8,0,0" Visibility="{Binding Info, Converter={StaticResource NullToVis}}"/>
+                <TextBlock Text="{Binding Summary}" Style="{StaticResource Hint}" Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Visibility="{Binding HasPlan, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="360"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Card}" Margin="0">
+                <DockPanel>
+                    <WrapPanel DockPanel.Dock="Bottom" Margin="0,10,0,0" IsEnabled="{Binding CanEdit}">
+                        <Button Content="O'tildi" Command="{Binding MarkCompletedCommand}"/>
+                        <Button Content="Keyingi darsga davom" Command="{Binding ExtendCommand}" ToolTip="Mavzu tugallanmadi — soat qo'shiladi, keyingi mavzular suriladi"/>
+                        <Button Content="Qulfni ochish" Command="{Binding UnlockCommand}"/>
+                        <Button Content="O'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteTopicCommand}"/>
+                    </WrapPanel>
+                    <DataGrid ItemsSource="{Binding Topics}" SelectedItem="{Binding SelectedTopic}" IsReadOnly="True">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsBehind}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource WarningSoft}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsNotPlaced}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource DangerSoft}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource SuccessSoft}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№" Binding="{Binding OrderNo}" Width="40"/>
+                            <DataGridTextColumn Header="Mavzu" Binding="{Binding Title}" Width="*"/>
+                            <DataGridTextColumn Header="Soat" Binding="{Binding Hours}" Width="45"/>
+                            <DataGridTextColumn Header="Turi" Binding="{Binding Type}" Width="90"/>
+                            <DataGridTextColumn Header="Rejadagi sana" Binding="{Binding Dates}" Width="120"/>
+                            <DataGridTextColumn Header="O'tildi" Binding="{Binding Actual}" Width="85"/>
+                            <DataGridTextColumn Header="Holat" Binding="{Binding Status}" Width="120"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Style="{StaticResource Card}" IsEnabled="{Binding CanEdit}">
+                        <StackPanel>
+                            <TextBlock Text="Sanalarga joylashtirish" Style="{StaticResource SectionTitle}"/>
+                            <RadioButton Content="Mavzu soatlari darslarga bo'linadi (4 soat = 2 ta 2 soatlik dars)" IsChecked="{Binding SplitMode}" GroupName="mode"/>
+                            <RadioButton Content="Har bir mavzu bitta darsga" IsChecked="{Binding OneLessonMode}" GroupName="mode"/>
+                            <WrapPanel Margin="0,10,0,0">
+                                <Button Content="Ko'rib chiqish" Command="{Binding PreviewPlacementCommand}"/>
+                                <Button Content="Qo'llash" Style="{StaticResource PrimaryButton}" Command="{Binding ApplyPlacementCommand}" Margin="0"/>
+                            </WrapPanel>
+                            <StackPanel Visibility="{Binding HasChanges, Converter={StaticResource BoolToVis}}" Margin="0,12,0,0">
+                                <Border Style="{StaticResource InfoBanner}">
+                                    <TextBlock Text="{Binding ChangesSummary}" TextWrapping="Wrap"/>
+                                </Border>
+                                <TextBlock Text="Avvalgi va yangi reja farqi" Style="{StaticResource Label}"/>
+                                <DataGrid ItemsSource="{Binding Changes}" IsReadOnly="True" MaxHeight="260">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Mavzu" Binding="{Binding Topic}" Width="*"/>
+                                        <DataGridTextColumn Header="Avval" Binding="{Binding Old}" Width="85"/>
+                                        <DataGridTextColumn Header="Yangi" Binding="{Binding New}" Width="85"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" IsEnabled="{Binding CanEdit}">
+                        <StackPanel>
+                            <TextBlock Text="Mavzu" Style="{StaticResource SectionTitle}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="№" Style="{StaticResource Label}"/>
+                                    <TextBox Text="{Binding FormOrder, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Soat" Style="{StaticResource Label}"/>
+                                    <TextBox Text="{Binding FormHours, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Turi" Style="{StaticResource Label}"/>
+                                    <ComboBox ItemsSource="{Binding Types}" SelectedItem="{Binding FormType}"/>
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="Mavzu nomi *" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormTitle, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="False"/>
+                            <TextBlock Text="Kutilayotgan natija" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormOutcome, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MinHeight="48"/>
+                            <TextBlock Text="Izoh" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormNote, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Text="O'qituvchi izohi" Style="{StaticResource Label}"/>
+                            <TextBox Text="{Binding FormTeacherNote, UpdateSourceTrigger=PropertyChanged}"/>
+                            <WrapPanel Margin="0,12,0,0">
+                                <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveTopicCommand}"/>
+                                <Button Content="Yangi mavzu" Command="{Binding NewTopicCommand}" Margin="0"/>
+                            </WrapPanel>
+                            <TextBlock Style="{StaticResource Hint}" Margin="0,10,0,0"
+                                       Text="Yashil — o'tilgan (qulflangan), sariq — rejadan ortda, qizil — dars sanasi yetmagan mavzular."/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

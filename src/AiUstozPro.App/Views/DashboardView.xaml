@@ -1,0 +1,114 @@
+<UserControl x:Class="AiUstozPro.App.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Text="{Binding Greeting}" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="{Binding CalendarText}" Style="{StaticResource PageSubtitle}"/>
+
+            <UniformGrid Columns="4" Margin="0,0,-14,0">
+                <Border Style="{StaticResource Card}" Margin="0,0,14,14">
+                    <StackPanel>
+                        <TextBlock Text="Davomat (30 kun)" Style="{StaticResource Hint}"/>
+                        <TextBlock Text="{Binding AttendanceText}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,14,14">
+                    <StackPanel>
+                        <TextBlock Text="Faol o'quvchilar" Style="{StaticResource Hint}"/>
+                        <TextBlock Text="{Binding StudentsText}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,14,14">
+                    <StackPanel>
+                        <TextBlock Text="O'tilgan / jami darslar" Style="{StaticResource Hint}"/>
+                        <TextBlock Text="{Binding LessonsText}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,14,14">
+                    <StackPanel>
+                        <TextBlock Text="O'tilgan / jami mavzular" Style="{StaticResource Hint}"/>
+                        <TextBlock Text="{Binding TopicsText}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Border Style="{StaticResource Card}" Visibility="{Binding SetupIncomplete, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="Ishni boshlash uchun" Style="{StaticResource SectionTitle}"/>
+                    <ItemsControl ItemsSource="{Binding SetupSteps}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,3">
+                                    <TextBlock Text="{Binding Mark}" Width="22" Foreground="{DynamicResource Accent}"/>
+                                    <TextBlock Text="{Binding Text}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <WrapPanel Margin="0,12,0,0">
+                        <Button Content="O'quv kalendari" Command="{Binding GoCalendarCommand}"/>
+                        <Button Content="Guruhlar" Command="{Binding GoGroupsCommand}"/>
+                        <Button Content="Dars jadvali" Command="{Binding GoTimetableCommand}"/>
+                        <Button Content="Dars sanalari" Command="{Binding GoLessonsCommand}"/>
+                        <Button Content="KTR" Command="{Binding GoCurriculumCommand}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="14"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Content="Yangilash" Command="{Binding RefreshCommand}" Margin="0"/>
+                            <TextBlock Text="Bugungi darslar" Style="{StaticResource SectionTitle}"/>
+                        </DockPanel>
+                        <TextBlock Text="Bugun dars yo'q yoki dars sanalari hali hisoblanmagan." Style="{StaticResource Hint}"
+                                   Visibility="{Binding TodayLessons.Count, Converter={StaticResource ZeroToVis}}"/>
+                        <ItemsControl ItemsSource="{Binding TodayLessons}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,10">
+                                        <DockPanel>
+                                            <Button DockPanel.Dock="Right" Content="Davomat olish" Style="{StaticResource PrimaryButton}" Margin="0"
+                                                    Command="{Binding DataContext.TakeAttendanceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" VerticalAlignment="Center"/>
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Time}" Width="100" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Header}" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding Details}" Style="{StaticResource Hint}"/>
+                                                <TextBlock Text="{Binding Topic, StringFormat='Mavzu: {0}'}" Style="{StaticResource Hint}"
+                                                           Visibility="{Binding Topic, Converter={StaticResource NullToVis}}"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                <StackPanel Grid.Column="2">
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Keyingi dars" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="{Binding NextLessonText}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Tezkor amallar" Style="{StaticResource SectionTitle}"/>
+                            <Button Content="Davomat olish" Command="{Binding TakeAttendanceCommand}" HorizontalAlignment="Stretch" Margin="0,0,0,8"/>
+                            <Button Content="Kalendar-tematik reja" Command="{Binding GoCurriculumCommand}" HorizontalAlignment="Stretch" Margin="0,0,0,8"/>
+                            <Button Content="Hisobot tayyorlash" Command="{Binding GoReportsCommand}" HorizontalAlignment="Stretch" Margin="0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -110,3 +110,35 @@ public class SecurityTests
     public void Rollar_ruxsatlari(UserRole role, Permission p, bool expected)
         => Assert.Equal(expected, Permissions.Has(role, p));
 }
+
+public class ExcelImportTests
+{
+    [Fact]
+    public void Excel_fayl_sarlavha_ustidagi_nom_satri_bilan_oqiladi()
+    {
+        using var dir = new TempDir();
+        Directory.CreateDirectory(dir.Path);
+        var path = System.IO.Path.Combine(dir.Path, "ktr.xlsx");
+        using (var wb = new ClosedXML.Excel.XLWorkbook())
+        {
+            var ws = wb.Worksheets.Add("KTR");
+            ws.Cell(1, 1).Value = "Informatika fanidan KTR";
+            ws.Cell(3, 1).Value = "T/r"; ws.Cell(3, 2).Value = "Mavzu nomi"; ws.Cell(3, 3).Value = "Soat";
+            ws.Cell(4, 1).Value = 1; ws.Cell(4, 2).Value = "Algoritm tushunchasi"; ws.Cell(4, 3).Value = 2;
+            ws.Cell(5, 1).Value = 2; ws.Cell(5, 2).Value = "Oʻzgaruvchilar va gʻoyalar"; ws.Cell(5, 3).Value = 4;
+            wb.SaveAs(path);
+        }
+        var data = AiUstozPro.Infrastructure.Import.TabularFileReader.Read(path);
+        Assert.Equal(new[] { "T/r", "Mavzu nomi", "Soat" }, data.Headers.ToArray());
+        var res = TopicImport.Validate(data, ColumnMapper.AutoMap(data.Headers, TopicImport.Fields));
+        Assert.All(res, r => Assert.True(r.IsValid));
+        Assert.Equal("Oʻzgaruvchilar va gʻoyalar", res[1].Item!.Title);
+        Assert.Equal(4, res[1].Item!.Hours);
+    }
+
+    [Fact]
+    public void Eski_xls_formati_tushunarli_xabar_bilan_rad_etiladi()
+    {
+        Assert.Throws<BusinessRuleException>(() => AiUstozPro.Infrastructure.Import.TabularFileReader.Read("eski.xls"));
+    }
+}

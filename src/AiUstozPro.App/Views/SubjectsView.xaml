@@ -1,0 +1,37 @@
+<UserControl x:Class="AiUstozPro.App.Views.SubjectsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="320"/>
+        </Grid.ColumnDefinitions>
+        <Border Style="{StaticResource Card}" Margin="0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Fanlar ro'yxati" Style="{StaticResource SectionTitle}"/>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource Hint}" Margin="0,0,0,10"
+                           Text="Fanlar dars jadvali, dars sanalari va KTR uchun ishlatiladi. Fan bir nechta guruhda o'tilishi mumkin."/>
+                <DataGrid ItemsSource="{Binding Subjects}" SelectedItem="{Binding Selected}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Fan nomi" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Qisqa kod" Binding="{Binding Code}" Width="140"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+        <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0" VerticalAlignment="Top" IsEnabled="{Binding CanEdit}">
+            <StackPanel>
+                <TextBlock Text="Fan" Style="{StaticResource SectionTitle}"/>
+                <TextBlock Text="Nomi *" Style="{StaticResource Label}"/>
+                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Qisqa kod (ixtiyoriy)" Style="{StaticResource Label}"/>
+                <TextBox Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}"/>
+                <WrapPanel Margin="0,12,0,0">
+                    <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}"/>
+                    <Button Content="Yangi" Command="{Binding NewCommand}"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
