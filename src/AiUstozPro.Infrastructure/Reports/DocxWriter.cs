@@ -27,11 +27,18 @@ public static class DocxWriter
                 new TableWidth { Width = "5000", Type = TableWidthUnitValues.Pct },
                 new TableBorders(
                     new TopBorder { Val = BorderValues.Single, Size = 4 },
-                    new BottomBorder { Val = BorderValues.Single, Size = 4 },
                     new LeftBorder { Val = BorderValues.Single, Size = 4 },
+                    new BottomBorder { Val = BorderValues.Single, Size = 4 },
                     new RightBorder { Val = BorderValues.Single, Size = 4 },
                     new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
                     new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 })));
+            // tblGrid majburiy: ustun kengliklari (twip) nisbiy kengliklar bo'yicha.
+            var usable = t.Landscape ? 14838 : 9906;
+            var widths = t.Widths.Count == t.Columns.Count ? t.Widths : t.Columns.Select(_ => 1f).ToList();
+            var sum = widths.Sum();
+            var grid = new TableGrid();
+            foreach (var w in widths) grid.Append(new GridColumn { Width = ((int)(usable * w / sum)).ToString() });
+            table.Append(grid);
             var header = new TableRow(new TableRowProperties(new TableHeader()));
             foreach (var c in t.Columns) header.Append(Cell(c, bold: true, shade: true));
             table.Append(header);
