@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.1.0</Version>
+    <Company>Murodov M.</Company>
+    <Product>AI Ustoz Pro</Product>
+    <Copyright>© 2026 Murodov M.</Copyright>
+    <Deterministic>true</Deterministic>
+    <NeutralLanguage>uz-Latn-UZ</NeutralLanguage>
+  </PropertyGroup>
+</Project>
