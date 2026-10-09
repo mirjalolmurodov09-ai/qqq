@@ -47,3 +47,8 @@ $lines += ""
 $lines += "Batafsil: docs/FOYDALANUVCHI-QOLLANMASI.md va docs/CHEKLOVLAR.md"
 $lines | Set-Content -Path BUILD-REPORT.md -Encoding utf8
 Get-Content BUILD-REPORT.md
+
+# Qisqa xulosani CI annotatsiyasi va sahifa xulosasi sifatida ham chiqaramiz.
+$summaryLine = ($lines | Where-Object { $_ -like '- Jami:*' -or $_ -like '- AiUstozPro*' }) -join ' | '
+Write-Host "::notice title=Yig'ish hisoboti::$summaryLine"
+if ($env:GITHUB_STEP_SUMMARY) { $lines | Add-Content -Path $env:GITHUB_STEP_SUMMARY -Encoding utf8 }
