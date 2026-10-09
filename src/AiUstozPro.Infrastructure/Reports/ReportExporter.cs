@@ -174,6 +174,62 @@ public static class ReportExporter
         File.WriteAllBytes(path, bytes);
     }
 
+    /// <summary>Belgilangan matnni (# sarlavha, **qalin**, - ro'yxat) Word yoki PDF ga chiqaradi.</summary>
+    public static void ExportText(string title, IReadOnlyList<string> meta, string text, ExportFormat format, string path)
+    {
+        var dir = Path.GetDirectoryName(Path.GetFullPath(path));
+        if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+        if (format == ExportFormat.Word) { DocxWriter.WriteText(title, meta, text, path); return; }
+        if (format != ExportFormat.Pdf) throw new ArgumentException("Matn faqat Word yoki PDF ga chiqariladi.");
+        var bytes = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(36);
+                page.DefaultTextStyle(x => x.FontSize(11));
+                page.Content().Column(col =>
+                {
+                    col.Item().Text(title).FontSize(15).Bold();
+                    foreach (var m in meta) col.Item().Text(m).FontSize(9).Italic();
+                    col.Item().PaddingBottom(6);
+                    foreach (var raw in (text ?? "").Replace("\r\n", "\n").Split('\n'))
+                    {
+                        var line = raw.TrimEnd();
+                        var trimmed = line.TrimStart();
+                        if (trimmed.StartsWith('#'))
+                        {
+                            var level = trimmed.TakeWhile(c => c == '#').Count();
+                            col.Item().PaddingTop(8).Text(trimmed[level..].Trim()).FontSize(level <= 1 ? 13 : 12).Bold();
+                        }
+                        else if (trimmed.StartsWith("```")) continue;
+                        else if (line.Length == 0) col.Item().Height(6);
+                        else
+                        {
+                            var indent = line.Length - trimmed.Length;
+                            col.Item().PaddingLeft(Math.Min(indent, 8) * 4).Text(t =>
+                            {
+                                var parts = trimmed.Split("**");
+                                for (int i = 0; i < parts.Length; i++)
+                                {
+                                    if (parts[i].Length == 0) continue;
+                                    var span = t.Span(parts[i]);
+                                    if (i % 2 == 1) span.Bold();
+                                }
+                            });
+                        }
+                    }
+                });
+                page.Footer().AlignCenter().Text(x =>
+                {
+                    x.Span("AI Ustoz Pro · ");
+                    x.CurrentPageNumber();
+                });
+            });
+        }).GeneratePdf();
+        File.WriteAllBytes(path, bytes);
+    }
+
     private static string SafeSheetName(string s)
     {
         var invalid = new[] { ':', '\\', '/', '?', '*', '[', ']' };

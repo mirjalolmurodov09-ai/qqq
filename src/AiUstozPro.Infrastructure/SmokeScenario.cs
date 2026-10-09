@@ -146,6 +146,23 @@ public static class SmokeScenario
         var pdfHead = File.ReadAllBytes(Path.Combine(exportDir, "ktr.pdf")).Take(5).ToArray();
         Check(System.Text.Encoding.ASCII.GetString(pdfHead) == "%PDF-", "PDF fayli to'g'ri formatda");
 
+        // 9a. Test va baholash
+        var test = app.Tests.Save(session!, new Assessment { Title = "Algoritmlar bo'yicha nazorat", SubjectId = subject.Id, VariantCount = 2, TimeLimitMinutes = 15 });
+        for (int qn = 1; qn <= 4; qn++)
+            app.Tests.SaveQuestion(session!, test.Id, new QuestionInput(0, $"Savol {qn}", 1, new[]
+                { new OptionInput("To'g'ri", true), new OptionInput("Xato 1", false), new OptionInput("Xato 2", false), new OptionInput("Xato 3", false) }));
+        app.Tests.SetStatus(session!, test.Id, AssessmentStatus.Ready);
+        var (tv, tk, _) = app.Tests.GetVariant(test.Id, 2);
+        var akey = tv.AnswerKey(tk);
+        var tres = app.Tests.RecordResult(session!, test.Id, students[0].Id, first.Date, 2,
+            AiUstozPro.Application.Testing.AnswerSheet.Parse(akey[..3] + "-", 4).Selections, ResultMethod.ManualEntry);
+        Check(tres.Percent == 75 && tres.AutoGrade == 4 && !tres.IsConfirmed, "Test natijasi variant bo'yicha baholandi (75% → 4), tasdiqlanmagan holatda");
+        app.Tests.Confirm(session!, tres.Id, 4, null);
+        var trep = app.Tests.ResultsReport(session!, test.Id, group.Id);
+        ReportExporter.Export(trep, ExportFormat.Pdf, Path.Combine(exportDir, "test-natija.pdf"));
+        ReportExporter.ExportText(test.Title, new[] { "2-variant" }, app.Tests.PrintableText(test.Id, 2), ExportFormat.Word, Path.Combine(exportDir, "test-variant2.docx"));
+        Check(File.Exists(Path.Combine(exportDir, "test-variant2.docx")), "Test o'qituvchi tasdiqladi, natijalar va chop etiladigan variant eksport qilindi");
+
         // 9b. AI: o'chirilgan holatda tushunarli xabar, qolgan tizim ishlayveradi; savol bazaga yozilmaydi.
         bool aiRefused = false;
         try { app.Ai.AskAsync(session!, null, "chat", "", "Salom", CancellationToken.None).GetAwaiter().GetResult(); }

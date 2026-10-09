@@ -27,6 +27,11 @@ public class AppDbContext : DbContext
     public DbSet<BackupHistory> BackupHistory => Set<BackupHistory>();
     public DbSet<AiConversation> AiConversations => Set<AiConversation>();
     public DbSet<AiMessage> AiMessages => Set<AiMessage>();
+    public DbSet<Assessment> Assessments => Set<Assessment>();
+    public DbSet<TestQuestion> TestQuestions => Set<TestQuestion>();
+    public DbSet<TestOption> TestOptions => Set<TestOption>();
+    public DbSet<TestResult> TestResults => Set<TestResult>();
+    public DbSet<TestAnswer> TestAnswers => Set<TestAnswer>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -158,6 +163,46 @@ public class AppDbContext : DbContext
             e.HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             e.HasMany(x => x.Messages).WithOne(m => m.Conversation).HasForeignKey(m => m.ConversationId).OnDelete(DeleteBehavior.Cascade);
         });
+        b.Entity<Assessment>(e =>
+        {
+            e.Property(x => x.Title).HasMaxLength(300).IsRequired();
+            e.Property(x => x.Status).HasConversion<int>();
+            e.HasOne(x => x.Subject).WithMany().HasForeignKey(x => x.SubjectId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne<CurriculumTopic>().WithMany().HasForeignKey(x => x.CurriculumTopicId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne<User>().WithMany().HasForeignKey(x => x.CreatedByUserId).OnDelete(DeleteBehavior.Restrict);
+            e.HasMany(x => x.Questions).WithOne(q => q.Assessment).HasForeignKey(q => q.AssessmentId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => new { x.SubjectId, x.Status });
+        });
+        b.Entity<TestQuestion>(e =>
+        {
+            e.Property(x => x.Text).IsRequired();
+            e.Property(x => x.Source).HasMaxLength(20);
+            e.HasMany(x => x.Options).WithOne(o => o.Question).HasForeignKey(o => o.QuestionId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => new { x.AssessmentId, x.OrderNo });
+        });
+        b.Entity<TestOption>(e =>
+        {
+            e.Property(x => x.Text).IsRequired();
+            e.HasIndex(x => new { x.QuestionId, x.OrderNo });
+        });
+        b.Entity<TestResult>(e =>
+        {
+            e.Property(x => x.Method).HasConversion<int>();
+            e.HasOne(x => x.Assessment).WithMany().HasForeignKey(x => x.AssessmentId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.Student).WithMany().HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne<Group>().WithMany().HasForeignKey(x => x.GroupId).OnDelete(DeleteBehavior.Restrict);
+            e.HasMany(x => x.Answers).WithOne(a => a.Result).HasForeignKey(a => a.TestResultId).OnDelete(DeleteBehavior.Cascade);
+            // Bir o'quvchi bir testni bir urinishda faqat bir marta topshiradi.
+            e.HasIndex(x => new { x.AssessmentId, x.StudentId, x.AttemptNo }).IsUnique();
+            e.HasIndex(x => new { x.GroupId, x.Date });
+        });
+        b.Entity<TestAnswer>(e =>
+        {
+            e.HasOne<TestQuestion>().WithMany().HasForeignKey(x => x.QuestionId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne<TestOption>().WithMany().HasForeignKey(x => x.SelectedOptionId).OnDelete(DeleteBehavior.Restrict);
+            e.HasIndex(x => new { x.TestResultId, x.QuestionId }).IsUnique();
+        });
+
         b.Entity<AiMessage>(e =>
         {
             e.Property(x => x.Role).HasMaxLength(20).IsRequired();

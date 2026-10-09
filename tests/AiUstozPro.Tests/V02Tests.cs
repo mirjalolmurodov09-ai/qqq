@@ -289,7 +289,7 @@ public class V02InfrastructureTests
         SqliteConnection.ClearAllPools();
         var upgraded = AppServices.Open(dir.Path, new InMemorySecretStore());
         Assert.Equal(1, upgraded.Migration.FromVersion);
-        Assert.Equal(2, upgraded.Migration.ToVersion);
+        Assert.Equal(DatabaseMigrator.CurrentVersion, upgraded.Migration.ToVersion);
         Assert.True(File.Exists(upgraded.Migration.BackupPath));
         var s = upgraded.Auth.Login("admin", "Admin12345").Session!;
         Assert.Single(upgraded.Academic.ListGroups(s));

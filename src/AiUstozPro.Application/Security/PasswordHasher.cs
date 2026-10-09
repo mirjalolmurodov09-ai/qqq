@@ -59,6 +59,7 @@ public enum Permission
     ExportReports,
     ViewReports,
     UseAi,
+    ManageTests,
 }
 
 public static class Permissions
@@ -69,7 +70,7 @@ public static class Permissions
         UserRole.Teacher => p is Permission.EditTimetable or Permission.EditGroupsAndStudents
                               or Permission.EditCurriculum or Permission.TakeAttendance
                               or Permission.ExportReports or Permission.ViewReports or Permission.EditCalendar
-                              or Permission.UseAi,
+                              or Permission.UseAi or Permission.ManageTests,
         UserRole.Observer => p is Permission.ViewReports or Permission.ExportReports,
         _ => false,
     };

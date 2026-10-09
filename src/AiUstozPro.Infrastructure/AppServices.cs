@@ -38,6 +38,7 @@ public sealed class AppServices
         Dashboard = new DashboardService(factory);
         Secrets = secrets;
         Ai = new AiService(factory, secrets);
+        Tests = new AssessmentService(factory);
     }
 
     public string DataDirectory { get; }
@@ -58,6 +59,7 @@ public sealed class AppServices
     public DashboardService Dashboard { get; }
     public ISecretStore Secrets { get; }
     public AiService Ai { get; }
+    public AssessmentService Tests { get; }
 
     public static AppServices Open(string dataDir, ISecretStore? secrets = null)
     {

@@ -262,3 +262,92 @@ public class AiMessage : Entity
     public bool IsReviewed { get; set; }
     public DateTime? ReviewedUtc { get; set; }
 }
+
+/// <summary>Test (nazorat ishi).</summary>
+public class Assessment : Entity
+{
+    public string Title { get; set; } = "";
+    public int SubjectId { get; set; }
+    public Subject? Subject { get; set; }
+    public int? CurriculumTopicId { get; set; }
+    public string? Description { get; set; }
+    /// <summary>0 — vaqt cheklanmagan.</summary>
+    public int TimeLimitMinutes { get; set; } = 20;
+    public bool ShuffleQuestions { get; set; } = true;
+    public bool ShuffleOptions { get; set; } = true;
+    /// <summary>Chop etiladigan variantlar soni (1–8).</summary>
+    public int VariantCount { get; set; } = 2;
+    /// <summary>Baholash mezoni: "5" uchun minimal foiz va h.k.</summary>
+    public int Grade5Min { get; set; } = 86;
+    public int Grade4Min { get; set; } = 71;
+    public int Grade3Min { get; set; } = 56;
+    public AssessmentStatus Status { get; set; } = AssessmentStatus.Draft;
+    public int CreatedByUserId { get; set; }
+    public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
+    public List<TestQuestion> Questions { get; set; } = new();
+}
+
+public class TestQuestion : Entity
+{
+    public int AssessmentId { get; set; }
+    public Assessment? Assessment { get; set; }
+    public int OrderNo { get; set; }
+    public string Text { get; set; } = "";
+    public int Points { get; set; } = 1;
+    /// <summary>"manual" yoki "ai".</summary>
+    public string Source { get; set; } = "manual";
+    /// <summary>AI yaratgan savol o'qituvchi tasdiqlamaguncha testga kirmaydi.</summary>
+    public bool IsApproved { get; set; } = true;
+    public List<TestOption> Options { get; set; } = new();
+}
+
+public class TestOption : Entity
+{
+    public int QuestionId { get; set; }
+    public TestQuestion? Question { get; set; }
+    public int OrderNo { get; set; }
+    public string Text { get; set; } = "";
+    public bool IsCorrect { get; set; }
+}
+
+/// <summary>O'quvchining test natijasi (TestResults).</summary>
+public class TestResult : Entity
+{
+    public int AssessmentId { get; set; }
+    public Assessment? Assessment { get; set; }
+    public int StudentId { get; set; }
+    public Student? Student { get; set; }
+    public int GroupId { get; set; }
+    public int AttemptNo { get; set; } = 1;
+    public DateOnly Date { get; set; }
+    public int Variant { get; set; } = 1;
+    public ResultMethod Method { get; set; }
+    public DateTime? StartedUtc { get; set; }
+    public DateTime? SubmittedUtc { get; set; }
+    public int? DurationSeconds { get; set; }
+    public int Score { get; set; }
+    public int MaxScore { get; set; }
+    public double Percent { get; set; }
+    /// <summary>Mezon bo'yicha avtomatik hisoblangan baho.</summary>
+    public int AutoGrade { get; set; }
+    /// <summary>O'qituvchi tasdiqlagan yakuniy baho.</summary>
+    public int? FinalGrade { get; set; }
+    public bool IsConfirmed { get; set; }
+    public int? ConfirmedByUserId { get; set; }
+    public DateTime? ConfirmedUtc { get; set; }
+    public string? Note { get; set; }
+    public int RecordedByUserId { get; set; }
+    public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+    public List<TestAnswer> Answers { get; set; } = new();
+}
+
+public class TestAnswer : Entity
+{
+    public int TestResultId { get; set; }
+    public TestResult? Result { get; set; }
+    public int QuestionId { get; set; }
+    public int? SelectedOptionId { get; set; }
+    public bool IsCorrect { get; set; }
+    public int Points { get; set; }
+}

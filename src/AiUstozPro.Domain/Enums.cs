@@ -164,3 +164,39 @@ public static class EnumText
         _ => d.ToString(),
     };
 }
+
+public enum AssessmentStatus
+{
+    Draft = 1,
+    Ready = 2,
+    Archived = 3,
+}
+
+public enum ResultMethod
+{
+    /// <summary>O'qituvchi qog'ozdagi javoblarni kiritgan.</summary>
+    ManualEntry = 1,
+    /// <summary>O'quvchi dasturda (kompyuterda) topshirgan.</summary>
+    Computer = 2,
+    /// <summary>Excel/CSV fayldan import qilingan.</summary>
+    Import = 3,
+}
+
+public static class TestEnumText
+{
+    public static string ToUz(this AssessmentStatus s) => s switch
+    {
+        AssessmentStatus.Draft => "Qoralama",
+        AssessmentStatus.Ready => "Tayyor",
+        AssessmentStatus.Archived => "Arxiv",
+        _ => s.ToString(),
+    };
+
+    public static string ToUz(this ResultMethod m) => m switch
+    {
+        ResultMethod.ManualEntry => "Qo'lda kiritilgan",
+        ResultMethod.Computer => "Kompyuterda",
+        ResultMethod.Import => "Import",
+        _ => m.ToString(),
+    };
+}
