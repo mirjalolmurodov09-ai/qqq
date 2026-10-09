@@ -1,0 +1,281 @@
+<UserControl x:Class="AiUstozPro.App.Views.TestsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource Card}" Margin="0">
+            <DockPanel>
+                <Button DockPanel.Dock="Top" Content="+ Yangi test" Style="{StaticResource PrimaryButton}" Command="{Binding NewTestCommand}"
+                        HorizontalAlignment="Stretch" Margin="0,0,0,10" IsEnabled="{Binding CanEdit}"/>
+                <TextBlock DockPanel.Dock="Top" Text="Testlar" Style="{StaticResource Label}" Margin="0,0,0,4"/>
+                <ListBox ItemsSource="{Binding Tests}" SelectedItem="{Binding SelectedTest}" BorderThickness="0" Background="Transparent"
+                         Foreground="{DynamicResource TextPrimary}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="2,5">
+                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                                <TextBlock Style="{StaticResource Hint}">
+                                    <Run Text="{Binding Subject.Name, Mode=OneWay}"/>
+                                    <Run Text=" · "/>
+                                    <Run Text="{Binding Status, Mode=OneWay, Converter={StaticResource EnumUz}}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0">
+            <DockPanel>
+                <Border DockPanel.Dock="Top" Style="{StaticResource InfoBanner}">
+                    <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap"/>
+                </Border>
+                <TabControl Background="Transparent" BorderBrush="{DynamicResource BorderBrush}">
+                    <!-- Sozlamalar -->
+                    <TabItem Header="Sozlamalar">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="4,8" MaxWidth="720" HorizontalAlignment="Left" IsEnabled="{Binding CanEdit}">
+                                <TextBlock Text="Test nomi" Style="{StaticResource Label}"/>
+                                <TextBox Text="{Binding TestTitle, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Fan" Style="{StaticResource Label}"/>
+                                        <ComboBox ItemsSource="{Binding Subjects}" SelectedItem="{Binding TestSubject}" DisplayMemberPath="Name"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Vaqt (daqiqa, 0 — cheklanmagan)" Style="{StaticResource Label}"/>
+                                        <TextBox Text="{Binding TimeLimit, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4">
+                                        <TextBlock Text="Variantlar soni (1–8)" Style="{StaticResource Label}"/>
+                                        <TextBox Text="{Binding VariantCount, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <WrapPanel Margin="0,10,0,0">
+                                    <CheckBox Content="Savollar tartibini aralashtirish (2-variantdan boshlab)" IsChecked="{Binding ShuffleQuestions}"/>
+                                    <CheckBox Content="Javob variantlarini aralashtirish" IsChecked="{Binding ShuffleOptions}"/>
+                                </WrapPanel>
+                                <TextBlock Text="Baholash mezoni (minimal foiz)" Style="{StaticResource SectionTitle}" Margin="0,16,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="&quot;5&quot; uchun, %" Style="{StaticResource Label}"/>
+                                        <TextBox Text="{Binding G5, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="&quot;4&quot; uchun, %" Style="{StaticResource Label}"/>
+                                        <TextBox Text="{Binding G4, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4">
+                                        <TextBlock Text="&quot;3&quot; uchun, %" Style="{StaticResource Label}"/>
+                                        <TextBox Text="{Binding G3, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock Text="{Binding Summary}" Style="{StaticResource Hint}" Margin="0,6,0,0"/>
+                                <WrapPanel Margin="0,16,0,0">
+                                    <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveTestCommand}"/>
+                                    <Button Content="Tayyor deb belgilash" Command="{Binding MarkReadyCommand}" IsEnabled="{Binding HasTest}"/>
+                                    <Button Content="Nusxa olish" Command="{Binding DuplicateTestCommand}" IsEnabled="{Binding HasTest}"/>
+                                    <Button Content="Variantlarni chop etish (Word/PDF)" Command="{Binding PrintCommand}" IsEnabled="{Binding HasTest}"/>
+                                    <Button Content="Arxivlash" Style="{StaticResource DangerButton}" Command="{Binding ArchiveCommand}" IsEnabled="{Binding HasTest}"/>
+                                </WrapPanel>
+                                <TextBlock Style="{StaticResource Hint}" Margin="0,12,0,0"
+                                           Text="Avtomatik baho faqat taklif: yakuniy bahoni o'qituvchi tasdiqlaydi. Natija kiritilgandan keyin savollarni o'zgartirib bo'lmaydi — kerak bo'lsa nusxa oling."/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+
+                    <!-- Savollar -->
+                    <TabItem Header="Savollar" IsEnabled="{Binding HasTest}">
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="380"/>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel>
+                                <WrapPanel DockPanel.Dock="Bottom" Margin="0,8,0,0" IsEnabled="{Binding CanEdit}">
+                                    <Button Content="▲" Command="{Binding MoveUpCommand}" ToolTip="Yuqoriga"/>
+                                    <Button Content="▼" Command="{Binding MoveDownCommand}" ToolTip="Pastga"/>
+                                    <Button Content="Tasdiqlash (AI savoli)" Command="{Binding ApproveQuestionCommand}"/>
+                                    <Button Content="O'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteQuestionCommand}"/>
+                                </WrapPanel>
+                                <DataGrid ItemsSource="{Binding Questions}" SelectedItem="{Binding SelectedQuestion}" IsReadOnly="True" RowHeight="NaN">
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding NeedsReview}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource WarningSoft}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.RowStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="№" Binding="{Binding No}" Width="36"/>
+                                        <DataGridTextColumn Header="Savol" Binding="{Binding Text}" Width="2*">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="Margin" Value="2,4"/></Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Variantlar (✔ — to'g'ri)" Binding="{Binding Options}" Width="3*">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="Margin" Value="2,4"/></Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Ball" Binding="{Binding Points}" Width="45"/>
+                                        <DataGridTextColumn Header="Manba" Binding="{Binding Source}" Width="65"/>
+                                        <DataGridTextColumn Header="Tasdiq" Binding="{Binding Approved}" Width="105"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+
+                            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                                <StackPanel IsEnabled="{Binding CanEdit}">
+                                    <TextBlock Text="Savol" Style="{StaticResource SectionTitle}"/>
+                                    <TextBox Text="{Binding QuestionText, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" Height="70"
+                                             VerticalContentAlignment="Top"/>
+                                    <TextBlock Text="Variantlar (to'g'ri javobni belgilang)" Style="{StaticResource Label}"/>
+                                    <ItemsControl ItemsSource="{Binding OptionEdits}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Margin="0,2">
+                                                    <RadioButton DockPanel.Dock="Left" GroupName="correct" IsChecked="{Binding IsCorrect}" VerticalAlignment="Center" Margin="0,0,6,0"
+                                                                 ToolTip="To'g'ri javob"/>
+                                                    <TextBlock DockPanel.Dock="Left" Text="{Binding Letter}" Width="18" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                    <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock Text="Ball" Style="{StaticResource Label}"/>
+                                    <TextBox Text="{Binding QuestionPoints, UpdateSourceTrigger=PropertyChanged}" Width="80" HorizontalAlignment="Left"/>
+                                    <WrapPanel Margin="0,10,0,0">
+                                        <Button Content="Saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveQuestionCommand}"/>
+                                        <Button Content="Yangi savol" Command="{Binding NewQuestionCommand}"/>
+                                    </WrapPanel>
+
+                                    <Border Background="{DynamicResource SurfaceAltBg}" CornerRadius="6" Padding="12" Margin="0,16,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="AI yordamida savollar yaratish" FontWeight="SemiBold"/>
+                                            <TextBlock Style="{StaticResource Hint}" Margin="0,4,0,0"
+                                                       Text="AI savollari &quot;tekshirilmagan&quot; holatida qo'shiladi va siz tasdiqlamaguningizcha testga kirmaydi."/>
+                                            <TextBlock Text="Mavzu" Style="{StaticResource Label}"/>
+                                            <TextBox Text="{Binding AiTopic, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="10"/>
+                                                    <ColumnDefinition Width="80"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Murakkablik" Style="{StaticResource Label}"/>
+                                                    <ComboBox ItemsSource="{Binding Levels}" SelectedItem="{Binding AiLevel}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="Soni" Style="{StaticResource Label}"/>
+                                                    <TextBox Text="{Binding AiCount, UpdateSourceTrigger=PropertyChanged}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                            <Button Content="AI bilan yaratish" Command="{Binding GenerateWithAiCommand}" HorizontalAlignment="Left" Margin="0,10,0,0"
+                                                    IsEnabled="{Binding AiEnabled}"/>
+                                            <TextBlock Text="AI javob tayyorlamoqda…" Style="{StaticResource Hint}" Margin="0,6,0,0"
+                                                       Visibility="{Binding AiBusy, Converter={StaticResource BoolToVis}}"/>
+                                            <TextBlock Text="AI xizmati sozlanmagan (Sozlamalar → AI xizmati)." Style="{StaticResource Hint}" Margin="0,6,0,0"
+                                                       Visibility="{Binding AiEnabled, Converter={StaticResource InvBoolToVis}}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- Natijalar -->
+                    <TabItem Header="Natijalar va baholash" IsEnabled="{Binding HasTest}">
+                        <DockPanel Margin="0,8,0,0">
+                            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                                <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding Groups}" SelectedItem="{Binding ResultGroup}" DisplayMemberPath="Name" Width="200"/>
+                                <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding ResultDate}" Width="150" Margin="10,0,0,0"/>
+                                <CheckBox DockPanel.Dock="Left" Content="Qayta topshirish (yangi urinish)" IsChecked="{Binding NewAttempt}" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="Import" Command="{Binding ImportResultsCommand}" IsEnabled="{Binding CanEdit}"/>
+                                    <Button Content="Hisobot" Command="{Binding ExportResultsCommand}"/>
+                                    <Button Content="Savollar tahlili" Command="{Binding ExportAnalysisCommand}" Margin="0"/>
+                                </StackPanel>
+                            </DockPanel>
+                            <TextBlock DockPanel.Dock="Top" Text="{Binding ResultsSummary}" Style="{StaticResource Hint}" Margin="0,0,0,8"/>
+                            <WrapPanel DockPanel.Dock="Bottom" Margin="0,8,0,0" IsEnabled="{Binding CanEdit}">
+                                <Button Content="Kiritilgan javoblarni saqlash" Style="{StaticResource PrimaryButton}" Command="{Binding SaveAnswersCommand}"/>
+                                <Button Content="Kompyuterda topshirish" Command="{Binding TakeOnComputerCommand}" ToolTip="Tanlangan o'quvchi shu kompyuterda testni topshiradi"/>
+                                <Button Content="Baholarni tasdiqlash" Command="{Binding ConfirmGradesCommand}"/>
+                                <Button Content="Tasdiqni bekor qilish" Command="{Binding UnconfirmCommand}"/>
+                                <Button Content="Natijani o'chirish" Style="{StaticResource DangerButton}" Command="{Binding DeleteResultCommand}"/>
+                            </WrapPanel>
+                            <DataGrid ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedResult}" CanUserSortColumns="False" SelectionUnit="FullRow">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsConfirmed}" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource SuccessSoft}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="F.I.Sh." Binding="{Binding Name, Mode=OneWay}" Width="2*" IsReadOnly="True"/>
+                                    <DataGridTemplateColumn Header="Var." Width="50">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Variant, UpdateSourceTrigger=PropertyChanged}" MinHeight="26" Padding="3,1"
+                                                         IsEnabled="{Binding IsConfirmed, Converter={StaticResource Not}}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Javoblar (ABCD, javobsiz —  -)" Width="2*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Text="{Binding Answers, UpdateSourceTrigger=PropertyChanged}" MinHeight="26" Padding="3,1" FontFamily="Consolas"
+                                                         CharacterCasing="Upper"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Ball" Binding="{Binding Score, Mode=OneWay}" Width="60" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Foiz" Binding="{Binding Percent, Mode=OneWay}" Width="60" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Avto" Binding="{Binding AutoGrade, Mode=OneWay}" Width="45" IsReadOnly="True"/>
+                                    <DataGridTemplateColumn Header="Yakuniy" Width="75">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox ItemsSource="{Binding DataContext.Grades, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                          SelectedItem="{Binding FinalGrade, UpdateSourceTrigger=PropertyChanged}" MinHeight="26" Padding="4,1"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Holat" Binding="{Binding State, Mode=OneWay}" Width="110" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Tafsilot" Binding="{Binding Info, Mode=OneWay}" Width="1.6*" IsReadOnly="True"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </TabItem>
+                </TabControl>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

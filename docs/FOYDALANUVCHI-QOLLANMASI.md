@@ -1,8 +1,8 @@
-# AI Ustoz Pro — foydalanuvchi qo'llanmasi (v0.2)
+# AI Ustoz Pro — foydalanuvchi qo'llanmasi (v0.3)
 
 ## 1. O'rnatish va birinchi ishga tushirish
 
-1. `AiUstozPro-Setup-0.2.0.exe` ni ishga tushiring. Administrator huquqi so'ralmaydi; dastur `%LOCALAPPDATA%\Programs\AI Ustoz Pro` ga o'rnatiladi. Windows SmartScreen "Noma'lum nashriyotchi" deb ogohlantirsa — **Batafsil → Baribir ishga tushirish** (dastur raqamli imzolanmagan, qarang: CHEKLOVLAR).
+1. `AiUstozPro-Setup-0.3.0.exe` ni ishga tushiring. Administrator huquqi so'ralmaydi; dastur `%LOCALAPPDATA%\Programs\AI Ustoz Pro` ga o'rnatiladi. Windows SmartScreen "Noma'lum nashriyotchi" deb ogohlantirsa — **Batafsil → Baribir ishga tushirish** (dastur raqamli imzolanmagan, qarang: CHEKLOVLAR).
 2. Birinchi ishga tushirishda **administrator hisobini** yarating: F.I.Sh., login (lotin harflari) va parol (kamida 8 belgi, harf va raqam).
 3. Bosh sahifadagi **"Ishni boshlash uchun"** ro'yxati qadamlarni ko'rsatadi.
 
@@ -75,6 +75,18 @@ Ranglar: yashil — o'tilgan, sariq — rejadan ortda, qizil — dars sanasi yet
 **Maxfiylik:** O'quvchilarning ism-familiyasini AI ga yozmang — matnda o'quvchi ismi uchrasa, dastur ogohlantiradi. "O'zlashtirish tahlili"da **Davomat ma'lumotini qo'shish (anonim)** tugmasi ismlarsiz statistikani (O'quvchi 1, 2, …) qo'shadi.
 
 AI ishlamasa (internet yo'q, kalit noto'g'ri), dastur tushunarli xabar beradi — qolgan barcha bo'limlar odatdagidek ishlaydi.
+
+### 2.9. Test va baholash
+1. **Yangi test** → nom, fan, vaqt (daqiqa), variantlar soni, aralashtirish va **baholash mezoni** (standart: 5 — 86%, 4 — 71%, 3 — 56%) → **Saqlash**.
+2. **Savollar** yorlig'i: savol matni, 2–6 ta variant, to'g'ri javobni belgilang, ball. Yoki **AI bilan yaratish** — AI savollari sariq rangda, "tekshirilmagan" bo'ladi: har birini o'qing, kerak bo'lsa tahrirlang va **Tasdiqlash** ni bosing.
+3. **Tayyor deb belgilash** — shundan keyin natija kiritish mumkin. Natija kiritilgach savollarni o'zgartirib bo'lmaydi (kerak bo'lsa **Nusxa olish**).
+4. **Variantlarni chop etish** — barcha variantlar Word yoki PDF ga, javoblar kaliti alohida faylga chiqadi.
+5. **Natijalar va baholash** yorlig'ida guruh va sanani tanlang. Natija uch xil usulda kiritiladi:
+   - qog'ozdagi javoblarni yozish: variant raqami va javoblar satri (masalan `BADC-A`, javobsiz — `-`) → **Kiritilgan javoblarni saqlash**;
+   - **Import** — Excel/CSV: O'quvchi (raqami yoki F.I.Sh.), Variant, Javoblar;
+   - **Kompyuterda topshirish** — tanlangan o'quvchi shu kompyuterda taymer bilan topshiradi, vaqt tugasa avtomatik topshiriladi.
+6. Dastur ball, foiz va **avtomatik bahoni** hisoblaydi — bu faqat taklif. **Yakuniy** ustunida bahoni tekshiring va **Baholarni tasdiqlash** ni bosing. Avtomatik bahodan farq qilsa, sabab so'raladi va audit jurnaliga yoziladi.
+7. **Hisobot** (Excel/Word/PDF) va **Savollar tahlili** — har bir savolga necha foiz o'quvchi to'g'ri javob bergani (juda qiyin yoki noaniq savollarni aniqlash uchun).
 
 ## 3. Zaxira nusxa
 Dastur har kuni avtomatik nusxa oladi. **Zaxira nusxalar** bo'limida (administrator):

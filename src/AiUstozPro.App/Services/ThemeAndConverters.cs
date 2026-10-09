@@ -36,6 +36,12 @@ public sealed class BoolToVisibilityConverter : IValueConverter
         => value is Visibility v && (v == Visibility.Visible) != Invert;
 }
 
+public sealed class InverseBoolConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => !(value is bool b && b);
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => !(value is bool b && b);
+}
+
 public sealed class NullToVisibilityConverter : IValueConverter
 {
     public bool Invert { get; set; }
@@ -72,6 +78,8 @@ public sealed class EnumUzConverter : IValueConverter
         CalendarExceptionKind k => k.ToUz(),
         UserRole r => r.ToUz(),
         DayOfWeek d => d.ToUz(),
+        AssessmentStatus st => st.ToUz(),
+        ResultMethod rm => rm.ToUz(),
         null => "",
         _ => value.ToString() ?? "",
     };

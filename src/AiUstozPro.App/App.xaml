@@ -16,6 +16,7 @@
             <svc:CountToVisibilityConverter x:Key="ZeroToVis" ZeroVisible="True"/>
             <svc:CountToVisibilityConverter x:Key="NonZeroToVis" ZeroVisible="False"/>
             <svc:EnumUzConverter x:Key="EnumUz"/>
+            <svc:InverseBoolConverter x:Key="Not"/>
             <svc:DateOnlyConverter x:Key="DateFmt"/>
         </ResourceDictionary>
     </Application.Resources>

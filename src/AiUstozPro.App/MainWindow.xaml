@@ -17,6 +17,7 @@
         <DataTemplate DataType="{x:Type vm:LessonsViewModel}"><v:LessonsView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:CurriculumViewModel}"><v:CurriculumView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:AttendanceViewModel}"><v:AttendanceView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TestsViewModel}"><v:TestsView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:ReportsViewModel}"><v:ReportsView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:UsersViewModel}"><v:UsersView/></DataTemplate>
         <DataTemplate DataType="{x:Type vm:BackupViewModel}"><v:BackupView/></DataTemplate>

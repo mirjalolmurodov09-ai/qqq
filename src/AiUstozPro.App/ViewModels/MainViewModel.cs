@@ -67,6 +67,7 @@ public sealed partial class MainViewModel : ObservableObject
         NavItems.Add(NavItem.Of("Dars sanalari", "", () => new LessonsViewModel()));
         NavItems.Add(NavItem.Of("Kalendar-tematik reja", "", () => new CurriculumViewModel()));
         NavItems.Add(NavItem.Of("Davomat", "", () => new AttendanceViewModel()));
+        NavItems.Add(NavItem.Of("Test va baholash", "\uE9D5", () => new TestsViewModel()));
         NavItems.Add(NavItem.Of("Hisobotlar", "", () => new ReportsViewModel()));
         if (s.Can(Permission.ManageUsers)) NavItems.Add(NavItem.Of("Foydalanuvchilar", "", () => new UsersViewModel()));
         if (s.Can(Permission.ManageBackups)) NavItems.Add(NavItem.Of("Zaxira nusxalar", "", () => new BackupViewModel()));

@@ -1,13 +1,12 @@
-# Ma'lum cheklovlar va keyingi bosqichlar (v0.2)
+# Ma'lum cheklovlar va keyingi bosqichlar (v0.3)
 
-v0.2 — asosiy yadro (kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, dars jadvali, sanalarni avtomatik hisoblash, KTR, qo'lda davomat, hisobotlar, zaxira) + AI yordamchi, Word eksport va shifrlangan zaxira. Quyidagilar ataylab keyingi bosqichlarga qoldirilgan va dasturda **ishlaydigandek ko'rsatilmagan**.
+v0.2 — asosiy yadro (kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, dars jadvali, sanalarni avtomatik hisoblash, KTR, qo'lda davomat, hisobotlar, zaxira) + AI yordamchi, Word eksport, shifrlangan zaxira va test/baholash. Quyidagilar ataylab keyingi bosqichlarga qoldirilgan va dasturda **ishlaydigandek ko'rsatilmagan**.
 
 ## Hali bajarilmagan modullar
 | Modul | Holat | Izoh |
 |---|---|---|
-| Yuz orqali davomat (TZ 7) | v0.3 | Quyidagi huquqiy talablar hal qilingandan keyin. Natija har doim o'qituvchi tasdiqlaydigan "nomzod" bo'ladi. |
+| Yuz orqali davomat (TZ 7) | Huquqiy masala hal bo'lgach | Quyidagi huquqiy talablar hal qilingandan keyin. Natija har doim o'qituvchi tasdiqlaydigan "nomzod" bo'ladi. |
 | Ovozli yordamchi (TZ 12) | v0.4 | Windows nutq API orqali; doimiy yozib olishsiz. |
-| Test va baholash (TZ 14) | v0.3 | |
 | Darsni boshqarish, lokal tarmoq (TZ 13) | Rejada | O'quvchi kompyuterlarida alohida agent kerak. |
 | Rus/ingliz interfeysi, PostgreSQL | Rejada | |
 
@@ -22,6 +21,8 @@ v0.2 — asosiy yadro (kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, da
 - **Sxema migratsiyalari** EF Core migratsiya fayllari o'rniga versiyalangan qadamlar bilan boshqariladi (`DatabaseMigrator`): yangi jadvallar EF modelidan yaratiladigan skriptdan olinadi, shuning uchun model bilan farq qilmaydi. v1 → v2 yangilanishi testda tekshirilgan. Har bir yangilashdan oldin avtomatik zaxira olinadi.
 - **Qorong'i rejim**: kiritish maydonlari (matn, ro'yxat, sana) o'qilishi uchun ataylab yorug' fonda qoladi.
 - **Interfeysning qo'lda sinovi**: CI har bir sahifani ikkala rejimda ochib, XAML/bog'lanish xatolarini tekshiradi, lekin tugmalarni bosib ko'rmaydi. Haqiqiy foydalanuvchi sinovi (o'qituvchi tomonidan) talab qilinadi.
+- **Test topshirish** hozircha 3 usulda: qog'ozda (javoblar o'qituvchi tomonidan kiritiladi), Excel/CSV import, yoki o'qituvchi kompyuterida navbatma-navbat. O'quvchilar kompyuterlarida lokal tarmoq orqali bir vaqtda topshirish keyingi bosqichda (alohida mijoz dasturi kerak).
+- Testda faqat **bitta to'g'ri javobli** savollar qo'llab-quvvatlanadi.
 - **Bayramlar**: faqat sanasi qonunda qat'iy belgilangan bayramlar taklif qilinadi. Hayitlar va har yilgi qo'shimcha dam olish kunlari qo'lda kiritiladi.
 
 ## Yuz orqali davomat uchun huquqiy talablar (yurist bilan tekshirish uchun)

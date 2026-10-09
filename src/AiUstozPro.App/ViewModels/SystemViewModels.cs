@@ -235,7 +235,7 @@ public sealed class ModuleStatus
 public sealed class AboutViewModel : PageViewModel
 {
     public override string Title => "Dastur haqida";
-    public string Version => "Versiya 0.2.0";
+    public string Version => "Versiya 0.3.0";
     public string Author => "Muallif: Murodov M., Informatika o'qituvchisi";
 
     public List<ModuleStatus> Modules { get; } = new()
@@ -252,7 +252,8 @@ public sealed class AboutViewModel : PageViewModel
         new() { Name = "AI yordamchi: Claude / OpenAI / lokal Ollama, 13 ta topshiriq shabloni, o'qituvchi tasdig'i", State = "Tayyor (v0.2)" },
         new() { Name = "Yuz orqali davomat (veb-kamera, rozilik bilan)", State = "Keyingi versiya" },
         new() { Name = "Ovozli yordamchi", State = "Keyingi versiya" },
-        new() { Name = "Test va baholash, darsni boshqarish vositalari", State = "Keyingi versiya" },
+        new() { Name = "Test va baholash: savollar (qo'lda va AI), variantlar, chop etish, javoblarni kiritish/import, kompyuterda topshirish (taymer), baholash mezoni, o'qituvchi tasdig'i, savollar tahlili", State = "Tayyor (v0.3)" },
+        new() { Name = "Darsni boshqarish vositalari (dars rejimi, taymer, lokal tarmoq)", State = "Keyingi versiya" },
         new() { Name = "Rus va ingliz tillari, PostgreSQL", State = "Rejada" },
     };
 }
