@@ -36,6 +36,33 @@ public sealed class BackupService
         return h;
     }
 
+    /// <summary>Parol bilan shifrlangan nusxa (fleshka, tarmoq disk yoki boshqa joy uchun).</summary>
+    public BackupHistory ExportEncrypted(UserSession session, string destinationPath, string password)
+    {
+        session.Demand(Permission.ManageBackups);
+        Directory.CreateDirectory(_backupDir);
+        var tmp = Path.Combine(_backupDir, $"~export-{Guid.NewGuid():N}.db");
+        try
+        {
+            DatabaseMigrator.SqliteBackup(_factory.DatabasePath, tmp);
+            if (!IsValidBackup(tmp, out var err)) throw new BusinessRuleException($"Zaxira nusxa tekshiruvdan o'tmadi: {err}");
+            var dir = Path.GetDirectoryName(Path.GetFullPath(destinationPath));
+            if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+            BackupCrypto.EncryptFile(tmp, destinationPath, password);
+        }
+        finally
+        {
+            SqliteConnection.ClearAllPools();
+            if (File.Exists(tmp)) File.Delete(tmp);
+        }
+        using var db = _factory.Create();
+        var h = new BackupHistory { FilePath = destinationPath, SizeBytes = new FileInfo(destinationPath).Length, Kind = "encrypted", CreatedBy = session.Login };
+        db.BackupHistory.Add(h);
+        db.Audit(session, "Shifrlangan zaxira nusxa yaratildi", nameof(BackupHistory), null, destinationPath);
+        db.SaveChanges();
+        return h;
+    }
+
     /// <summary>Kuniga bir martadan ko'p bo'lmagan avtomatik zaxira; eng so'nggi 14 ta avtomatik nusxa saqlanadi.</summary>
     public BackupHistory? AutoBackupIfDue()
     {
@@ -90,10 +117,26 @@ public sealed class BackupService
     /// Zaxira nusxadan tiklash. Avval joriy baza "before-restore" nusxasi sifatida saqlanadi.
     /// Tiklangandan keyin dasturni qayta ishga tushirish kerak.
     /// </summary>
-    public string Restore(UserSession session, string backupPath)
+    public string Restore(UserSession session, string backupPath, string? password = null)
     {
         session.Demand(Permission.ManageBackups);
         if (!File.Exists(backupPath)) throw new BusinessRuleException("Fayl topilmadi.");
+        if (BackupCrypto.IsEncrypted(backupPath))
+        {
+            if (string.IsNullOrEmpty(password)) throw new BusinessRuleException("Bu zaxira nusxa shifrlangan — parolni kiriting.");
+            Directory.CreateDirectory(_backupDir);
+            var tmp = Path.Combine(_backupDir, $"~restore-{Guid.NewGuid():N}.db");
+            try
+            {
+                BackupCrypto.DecryptFile(backupPath, tmp, password);
+                return Restore(session, tmp, null);
+            }
+            finally
+            {
+                SqliteConnection.ClearAllPools();
+                try { if (File.Exists(tmp)) File.Delete(tmp); } catch (IOException) { }
+            }
+        }
         if (!IsValidBackup(backupPath, out var err)) throw new BusinessRuleException($"Bu fayldan tiklab bo'lmaydi: {err}");
 
         var safety = CreateBackup(session, "before-restore");

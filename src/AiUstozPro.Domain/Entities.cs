@@ -234,3 +234,31 @@ public class BackupHistory : Entity
     public string Kind { get; set; } = "manual";
     public string? CreatedBy { get; set; }
 }
+
+/// <summary>AI yordamchi bilan suhbat.</summary>
+public class AiConversation : Entity
+{
+    public int UserId { get; set; }
+    public string Title { get; set; } = "";
+    public string TaskKey { get; set; } = "chat";
+    public string Provider { get; set; } = "";
+    public string Model { get; set; } = "";
+    public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
+    public List<AiMessage> Messages { get; set; } = new();
+}
+
+public class AiMessage : Entity
+{
+    public int ConversationId { get; set; }
+    public AiConversation? Conversation { get; set; }
+    /// <summary>"user" yoki "assistant".</summary>
+    public string Role { get; set; } = "user";
+    public string Content { get; set; } = "";
+    public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+    public int? InputTokens { get; set; }
+    public int? OutputTokens { get; set; }
+    /// <summary>O'qituvchi AI javobini tekshirib tasdiqlagan.</summary>
+    public bool IsReviewed { get; set; }
+    public DateTime? ReviewedUtc { get; set; }
+}

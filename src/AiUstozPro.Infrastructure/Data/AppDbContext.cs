@@ -25,6 +25,8 @@ public class AppDbContext : DbContext
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<AppSetting> AppSettings => Set<AppSetting>();
     public DbSet<BackupHistory> BackupHistory => Set<BackupHistory>();
+    public DbSet<AiConversation> AiConversations => Set<AiConversation>();
+    public DbSet<AiMessage> AiMessages => Set<AiMessage>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -148,6 +150,20 @@ public class AppDbContext : DbContext
         });
 
         b.Entity<AppSetting>(e => e.HasIndex(x => x.Key).IsUnique());
+
+        b.Entity<AiConversation>(e =>
+        {
+            e.Property(x => x.Title).HasMaxLength(300);
+            e.HasIndex(x => new { x.UserId, x.UpdatedUtc });
+            e.HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            e.HasMany(x => x.Messages).WithOne(m => m.Conversation).HasForeignKey(m => m.ConversationId).OnDelete(DeleteBehavior.Cascade);
+        });
+        b.Entity<AiMessage>(e =>
+        {
+            e.Property(x => x.Role).HasMaxLength(20).IsRequired();
+            e.HasIndex(x => new { x.ConversationId, x.CreatedUtc });
+            e.HasIndex(x => x.CreatedUtc);
+        });
     }
 }
 

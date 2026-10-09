@@ -130,7 +130,7 @@ public static class SmokeScenario
         var exportDir = Path.Combine(dataDir, "exports");
         var report = app.Reports.AttendanceMatrix(session!, group.Id, subject.Id, cal.StartDate, cal.EndDate);
         var ktr = app.Reports.Curriculum(session!, plan.Id, DateOnly.FromDateTime(DateTime.Today));
-        foreach (var fmt in new[] { ExportFormat.Excel, ExportFormat.Csv, ExportFormat.Pdf })
+        foreach (var fmt in new[] { ExportFormat.Excel, ExportFormat.Csv, ExportFormat.Pdf, ExportFormat.Word })
         {
             var p1 = Path.Combine(exportDir, "davomat" + ReportExporter.Extension(fmt));
             var p2 = Path.Combine(exportDir, "ktr" + ReportExporter.Extension(fmt));
@@ -145,6 +145,17 @@ public static class SmokeScenario
         }
         var pdfHead = File.ReadAllBytes(Path.Combine(exportDir, "ktr.pdf")).Take(5).ToArray();
         Check(System.Text.Encoding.ASCII.GetString(pdfHead) == "%PDF-", "PDF fayli to'g'ri formatda");
+
+        // 9b. AI: o'chirilgan holatda tushunarli xabar, qolgan tizim ishlayveradi; savol bazaga yozilmaydi.
+        bool aiRefused = false;
+        try { app.Ai.AskAsync(session!, null, "chat", "", "Salom", CancellationToken.None).GetAwaiter().GetResult(); }
+        catch (AiUstozPro.Application.Ai.AiException) { aiRefused = true; }
+        Check(aiRefused && app.Ai.ListConversations(session!).Count == 0, "AI o'chirilganda so'rov rad etildi, dastur ishlashda davom etdi");
+
+        // 9c. Shifrlangan zaxira nusxa
+        var enc = Path.Combine(dataDir, "flesh", "nusxa" + BackupCrypto.Extension);
+        app.Backup.ExportEncrypted(session!, enc, "SmokeParol2026");
+        Check(BackupCrypto.IsEncrypted(enc), "Parol bilan shifrlangan zaxira nusxa yaratildi (AES-256-GCM)");
 
         // 10. Zaxira va tiklash
         var backup = app.Backup.CreateBackup(session!);

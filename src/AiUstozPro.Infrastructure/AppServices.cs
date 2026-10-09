@@ -1,3 +1,5 @@
+using AiUstozPro.Application.Ai;
+using AiUstozPro.Infrastructure.Ai;
 using AiUstozPro.Infrastructure.Data;
 using AiUstozPro.Infrastructure.Reports;
 using AiUstozPro.Infrastructure.Services;
@@ -15,7 +17,7 @@ public static class AppPaths
 /// <summary>Kompozitsiya ildizi: barcha servislar bitta joyda yaratiladi.</summary>
 public sealed class AppServices
 {
-    private AppServices(string dataDir, SqliteDbFactory factory, DatabaseMigrator.MigrationReport migration)
+    private AppServices(string dataDir, SqliteDbFactory factory, DatabaseMigrator.MigrationReport migration, ISecretStore secrets)
     {
         DataDirectory = dataDir;
         Factory = factory;
@@ -34,6 +36,8 @@ public sealed class AppServices
         Backup = new BackupService(factory, BackupDirectory);
         Settings = new SettingsService(factory);
         Dashboard = new DashboardService(factory);
+        Secrets = secrets;
+        Ai = new AiService(factory, secrets);
     }
 
     public string DataDirectory { get; }
@@ -52,14 +56,17 @@ public sealed class AppServices
     public BackupService Backup { get; }
     public SettingsService Settings { get; }
     public DashboardService Dashboard { get; }
+    public ISecretStore Secrets { get; }
+    public AiService Ai { get; }
 
-    public static AppServices Open(string dataDir)
+    public static AppServices Open(string dataDir, ISecretStore? secrets = null)
     {
+        secrets ??= OperatingSystem.IsWindows() ? new WindowsCredentialStore() : new InMemorySecretStore();
         var dbDir = Path.Combine(dataDir, "data");
         Directory.CreateDirectory(dbDir);
         var factory = new SqliteDbFactory(Path.Combine(dbDir, "aiustoz.db"));
         var report = DatabaseMigrator.Migrate(factory, Path.Combine(dataDir, "backups"));
-        return new AppServices(dataDir, factory, report);
+        return new AppServices(dataDir, factory, report, secrets);
     }
 }
 

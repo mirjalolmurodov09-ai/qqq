@@ -1,3 +1,4 @@
+using AiUstozPro.Application.Ai;
 using AiUstozPro.Application.Security;
 using AiUstozPro.Domain;
 using AiUstozPro.Infrastructure.Data;
@@ -96,6 +97,26 @@ public sealed class ReportService
         t.FooterLines.Add($"Darslar soni: {lessons.Count}. Umumiy davomat: {(totMarked == 0 ? "—" : $"{Math.Round(100.0 * totPresent / totMarked, 1):0.#}%")}.");
         t.FooterLines.Add($"Tayyorlandi: {DateTime.Now:dd.MM.yyyy HH:mm}, {session.FullName}");
         return t;
+    }
+
+    /// <summary>AI tahlili uchun ANONIM davomat ma'lumoti (ismlarsiz, tartibi aralashtirilgan).</summary>
+    public string AnonymousAttendance(UserSession session, int groupId, int? subjectId, DateOnly from, DateOnly to)
+    {
+        using var db = _factory.Create();
+        DemandGroup(db, session, groupId);
+        var group = db.Groups.AsNoTracking().First(g => g.Id == groupId);
+        var q = db.AttendanceRecords.AsNoTracking()
+            .Where(a => a.Lesson!.GroupId == groupId && a.Lesson.Date >= from && a.Lesson.Date <= to);
+        if (subjectId is int sid) q = q.Where(a => a.Lesson!.SubjectId == sid);
+        var recs = q.Select(a => new { a.StudentId, a.Status }).ToList();
+        var stats = recs.GroupBy(r => r.StudentId).Select(g => new Anonymizer.StudentStat("",
+            g.Count(x => x.Status is AttendanceStatus.Present or AttendanceStatus.LeftWithPermission),
+            g.Count(x => x.Status == AttendanceStatus.Late),
+            g.Count(x => x.Status == AttendanceStatus.AbsentExcused),
+            g.Count(x => x.Status == AttendanceStatus.AbsentUnexcused),
+            g.Count())).ToList();
+        var label = string.IsNullOrWhiteSpace(group.Course) ? "tanlangan guruh" : group.Course!;
+        return Anonymizer.AttendanceSummary(label, $"{from.ToString(DateFormat)} — {to.ToString(DateFormat)}", stats);
     }
 
     /// <summary>Bitta o'quvchining davomat tarixi.</summary>

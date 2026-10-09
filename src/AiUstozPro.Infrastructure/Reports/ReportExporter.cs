@@ -8,7 +8,7 @@ using QuestPDF.Infrastructure;
 
 namespace AiUstozPro.Infrastructure.Reports;
 
-public enum ExportFormat { Excel, Csv, Pdf }
+public enum ExportFormat { Excel, Csv, Pdf, Word }
 
 public static class ReportExporter
 {
@@ -23,6 +23,7 @@ public static class ReportExporter
         ExportFormat.Excel => ".xlsx",
         ExportFormat.Csv => ".csv",
         ExportFormat.Pdf => ".pdf",
+        ExportFormat.Word => ".docx",
         _ => "",
     };
 
@@ -37,6 +38,7 @@ public static class ReportExporter
             case ExportFormat.Excel: ToExcel(table, tmp); break;
             case ExportFormat.Csv: ToCsv(table, tmp); break;
             case ExportFormat.Pdf: ToPdf(table, tmp); break;
+            case ExportFormat.Word: DocxWriter.WriteTable(table, tmp); break;
         }
         try
         {
@@ -47,6 +49,17 @@ public static class ReportExporter
             if (File.Exists(tmp)) File.Delete(tmp);
         }
     }
+
+    /// <summary>Fayl kengaytmasi bo'yicha format (.xlsx/.pdf/.csv/.docx).</summary>
+    public static ExportFormat FormatFromPath(string path) => Path.GetExtension(path).ToLowerInvariant() switch
+    {
+        ".pdf" => ExportFormat.Pdf,
+        ".csv" => ExportFormat.Csv,
+        ".docx" => ExportFormat.Word,
+        _ => ExportFormat.Excel,
+    };
+
+    public const string SaveFilter = "Excel (*.xlsx)|*.xlsx|Word (*.docx)|*.docx|PDF (*.pdf)|*.pdf|CSV (*.csv)|*.csv";
 
     public static void ToCsv(ReportTable t, string path)
     {
