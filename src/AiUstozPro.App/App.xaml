@@ -1,7 +1,22 @@
 <Application x:Class="AiUstozPro.App.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:svc="clr-namespace:AiUstozPro.App.Services"
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/AiUstozPro;component/Themes/Colors.Light.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/AiUstozPro;component/Themes/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <svc:BoolToVisibilityConverter x:Key="BoolToVis"/>
+            <svc:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True"/>
+            <svc:NullToVisibilityConverter x:Key="NullToVis"/>
+            <svc:NullToVisibilityConverter x:Key="InvNullToVis" Invert="True"/>
+            <svc:CountToVisibilityConverter x:Key="ZeroToVis" ZeroVisible="True"/>
+            <svc:CountToVisibilityConverter x:Key="NonZeroToVis" ZeroVisible="False"/>
+            <svc:EnumUzConverter x:Key="EnumUz"/>
+            <svc:DateOnlyConverter x:Key="DateFmt"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

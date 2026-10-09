@@ -22,7 +22,13 @@ if ($trx) {
   $c = $x.TestRun.ResultSummary.Counters
   $lines += "- Jami: $($c.total), o'tdi: $($c.passed), yiqildi: $($c.failed), bajarilmadi: $($c.notExecuted)"
   $failed = $x.TestRun.Results.UnitTestResult | Where-Object { $_.outcome -ne 'Passed' }
-  foreach ($t in $failed) { $lines += "  - YIQILDI: $($t.testName)" }
+  foreach ($t in $failed) {
+    $lines += "  - YIQILDI: $($t.testName)"
+    $msg = ($t.Output.ErrorInfo.Message -replace "`r?`n", ' ')
+    if ($msg.Length -gt 900) { $msg = $msg.Substring(0, 900) }
+    $st = ($t.Output.ErrorInfo.StackTrace -split "`n" | Select-Object -First 3) -join ' | '
+    Write-Host "::error title=Test yiqildi: $($t.testName)::$msg  @@ $st"
+  }
   $lines += ""
   $lines += "<details><summary>Barcha testlar ro'yxati</summary>"
   $lines += ""

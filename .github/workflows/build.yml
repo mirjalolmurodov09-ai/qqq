@@ -27,11 +27,12 @@ jobs:
       - name: Paketlarni tiklash
         run: dotnet restore AiUstozPro.sln
 
-      - name: Kompilyatsiya (Release)
-        run: dotnet build AiUstozPro.sln -c Release --no-restore
+      - name: Avtomatik testlar (yadro, baza, eksport)
+        run: dotnet test tests/AiUstozPro.Tests/AiUstozPro.Tests.csproj -c Release --no-restore --logger "trx;LogFileName=tests.trx" --logger "console;verbosity=normal" --results-directory TestResults
 
-      - name: Avtomatik testlar
-        run: dotnet test tests/AiUstozPro.Tests/AiUstozPro.Tests.csproj -c Release --no-build --logger "trx;LogFileName=tests.trx" --logger "console;verbosity=normal" --results-directory TestResults
+      - name: To'liq yechimni kompilyatsiya qilish (Release)
+        if: always()
+        run: dotnet build AiUstozPro.sln -c Release --no-restore
 
       - name: Bitta faylli self-contained nashr (win-x64)
         run: dotnet publish src/AiUstozPro.App/AiUstozPro.App.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
@@ -42,8 +43,13 @@ jobs:
           $data = Join-Path $env:RUNNER_TEMP "aup-smoke"
           $p = Start-Process -FilePath "publish\AiUstozPro.exe" -ArgumentList "--smoke-test", "--data-dir", "`"$data`"" -PassThru -Wait
           Write-Host "Chiqish kodi: $($p.ExitCode)"
-          Get-Content (Join-Path $data "smoke-test.log") -ErrorAction SilentlyContinue
-          if ($p.ExitCode -ne 0) { throw "Smoke test muvaffaqiyatsiz" }
+          $log = Get-Content (Join-Path $data "smoke-test.log") -ErrorAction SilentlyContinue
+          $log
+          if ($p.ExitCode -ne 0) {
+            $err = ($log | Select-Object -Last 12) -join ' | '
+            Write-Host "::error title=Smoke test::$err"
+            throw "Smoke test muvaffaqiyatsiz"
+          }
 
       - name: Inno Setup o'rnatish (agar yo'q bo'lsa)
         shell: pwsh

@@ -33,6 +33,7 @@ public sealed class AppServices
         Reports = new ReportService(factory);
         Backup = new BackupService(factory, BackupDirectory);
         Settings = new SettingsService(factory);
+        Dashboard = new DashboardService(factory);
     }
 
     public string DataDirectory { get; }
@@ -50,6 +51,7 @@ public sealed class AppServices
     public ReportService Reports { get; }
     public BackupService Backup { get; }
     public SettingsService Settings { get; }
+    public DashboardService Dashboard { get; }
 
     public static AppServices Open(string dataDir)
     {
