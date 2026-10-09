@@ -87,7 +87,7 @@ public static class LessonDateGenerator
             for (var d = x.StartDate; d <= x.EndDate; d = d.AddDays(1))
             {
                 if (d < calendar.StartDate || d > calendar.EndDate) continue;
-                foreach (var entry in active.Where(e => e.DayOfWeek == x.WorksAsDayOfWeek!.Value && Applies(x, entry)))
+                foreach (var entry in active.Where(e => e.DayOfWeek == x.WorksAsDayOfWeek!.Value && Applies(x, e)))
                 {
                     if (entry.ValidFrom is { } vf && d < vf) continue;
                     if (entry.ValidTo is { } vt && d > vt) continue;
