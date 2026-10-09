@@ -327,9 +327,10 @@ public sealed class AboutViewModel : PageViewModel
         new() { Name = "Zaxira nusxa va tiklash, avtomatik kunlik zaxira, parol bilan shifrlangan nusxa (AES-256)", State = "Tayyor" },
         new() { Name = "AI yordamchi: Claude / OpenAI / lokal Ollama, 13 ta topshiriq shabloni, o'qituvchi tasdig'i", State = "Tayyor (v0.2)" },
         new() { Name = "Yuz orqali davomat (veb-kamera, rozilik bilan)", State = "Keyingi versiya" },
-        new() { Name = "Ovozli yordamchi", State = "Keyingi versiya" },
+        new() { Name = "Ovozli yordamchi: mikrofon orqali savol (OpenAI — o'zbekcha, Windows — internetsiz), javobni o'qib berish", State = "Tayyor (v0.4)" },
         new() { Name = "Test va baholash: savollar (qo'lda va AI), variantlar, chop etish, javoblarni kiritish/import, kompyuterda topshirish (taymer), baholash mezoni, o'qituvchi tasdig'i, savollar tahlili", State = "Tayyor (v0.3)" },
-        new() { Name = "Darsni boshqarish vositalari (dars rejimi, taymer, lokal tarmoq)", State = "Keyingi versiya" },
+        new() { Name = "Dars rejimi: joriy mavzu va materiallar, taymer, topshiriq va tezkor so'rov proyektorda, dars jurnali, AI xulosa, dars hisoboti", State = "Tayyor (v0.4)" },
+        new() { Name = "O'quvchi kompyuterlari bilan lokal tarmoq (topshiriq yuborish, ekranlar)", State = "Rejada" },
         new() { Name = "Rus va ingliz tillari, PostgreSQL", State = "Rejada" },
     };
 }

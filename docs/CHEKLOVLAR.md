@@ -1,4 +1,4 @@
-# Ma'lum cheklovlar va keyingi bosqichlar (v0.3)
+# Ma'lum cheklovlar va keyingi bosqichlar (v0.4)
 
 v0.2 — asosiy yadro (kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, dars jadvali, sanalarni avtomatik hisoblash, KTR, qo'lda davomat, hisobotlar, zaxira) + AI yordamchi, Word eksport, shifrlangan zaxira va test/baholash. Quyidagilar ataylab keyingi bosqichlarga qoldirilgan va dasturda **ishlaydigandek ko'rsatilmagan**.
 
@@ -6,8 +6,7 @@ v0.2 — asosiy yadro (kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, da
 | Modul | Holat | Izoh |
 |---|---|---|
 | Yuz orqali davomat (TZ 7) | Huquqiy masala hal bo'lgach | Quyidagi huquqiy talablar hal qilingandan keyin. Natija har doim o'qituvchi tasdiqlaydigan "nomzod" bo'ladi. |
-| Ovozli yordamchi (TZ 12) | v0.4 | Windows nutq API orqali; doimiy yozib olishsiz. |
-| Darsni boshqarish, lokal tarmoq (TZ 13) | Rejada | O'quvchi kompyuterlarida alohida agent kerak. |
+| Lokal tarmoq: o'quvchilarga topshiriq yuborish, ekranlarni ko'rish (TZ 13) | Rejada | O'quvchi kompyuterlarida alohida mijoz dasturi kerak; faqat aniq ruxsat va audit bilan. |
 | Rus/ingliz interfeysi, PostgreSQL | Rejada | |
 
 ## Texnik cheklovlar
@@ -21,6 +20,10 @@ v0.2 — asosiy yadro (kirish va rollar, guruh/o'quvchi/fan, o'quv kalendari, da
 - **Sxema migratsiyalari** EF Core migratsiya fayllari o'rniga versiyalangan qadamlar bilan boshqariladi (`DatabaseMigrator`): yangi jadvallar EF modelidan yaratiladigan skriptdan olinadi, shuning uchun model bilan farq qilmaydi. v1 → v2 yangilanishi testda tekshirilgan. Har bir yangilashdan oldin avtomatik zaxira olinadi.
 - **Qorong'i rejim**: kiritish maydonlari (matn, ro'yxat, sana) o'qilishi uchun ataylab yorug' fonda qoladi.
 - **Interfeysning qo'lda sinovi**: CI har bir sahifani ikkala rejimda ochib, XAML/bog'lanish xatolarini tekshiradi, lekin tugmalarni bosib ko'rmaydi. Haqiqiy foydalanuvchi sinovi (o'qituvchi tomonidan) talab qilinadi.
+- **Ovozli yordamchi — o'zbek tili**: o'zbekcha nutqni aniqlash faqat OpenAI orqali (internet va OpenAI kaliti, pullik). Windows'ning o'rnatilgan nutqni aniqlash moduli o'zbek tilini qo'llab-quvvatlamaydi (odatda faqat ingliz/rus). O'qib berish Windows'dagi ovozlar bilan — o'zbek ovozi odatda o'rnatilmagan, shuning uchun o'zbekcha matn rus yoki ingliz ovozida o'qiladi (talaffuz noaniq bo'ladi).
+- Ovoz qurilmalari (mikrofon, karnay) CI muhitida yo'q — mikrofon va o'qib berish haqiqiy kompyuterda sinalishi kerak. Avtomatik testlar WAV kodlash, transkripsiya so'rovi va sozlamalarni tekshiradi.
+- **Dars rejimidagi materiallar** fayl yo'li sifatida saqlanadi (nusxa olinmaydi) — fayl ko'chirilsa yoki o'chirilsa, havola ishlamaydi. Zaxira nusxaga materiallar fayllari kirmaydi.
+- **Tezkor so'rov** sinfda qo'l ko'tarish asosida (o'qituvchi sanaydi) — shaxsiy natija yozilmaydi.
 - **Test topshirish** hozircha 3 usulda: qog'ozda (javoblar o'qituvchi tomonidan kiritiladi), Excel/CSV import, yoki o'qituvchi kompyuterida navbatma-navbat. O'quvchilar kompyuterlarida lokal tarmoq orqali bir vaqtda topshirish keyingi bosqichda (alohida mijoz dasturi kerak).
 - Testda faqat **bitta to'g'ri javobli** savollar qo'llab-quvvatlanadi.
 - **Bayramlar**: faqat sanasi qonunda qat'iy belgilangan bayramlar taklif qilinadi. Hayitlar va har yilgi qo'shimcha dam olish kunlari qo'lda kiritiladi.

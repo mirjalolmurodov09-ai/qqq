@@ -1,8 +1,8 @@
-# AI Ustoz Pro — foydalanuvchi qo'llanmasi (v0.3)
+# AI Ustoz Pro — foydalanuvchi qo'llanmasi (v0.4)
 
 ## 1. O'rnatish va birinchi ishga tushirish
 
-1. `AiUstozPro-Setup-0.3.0.exe` ni ishga tushiring. Administrator huquqi so'ralmaydi; dastur `%LOCALAPPDATA%\Programs\AI Ustoz Pro` ga o'rnatiladi. Windows SmartScreen "Noma'lum nashriyotchi" deb ogohlantirsa — **Batafsil → Baribir ishga tushirish** (dastur raqamli imzolanmagan, qarang: CHEKLOVLAR).
+1. `AiUstozPro-Setup-0.4.0.exe` ni ishga tushiring. Administrator huquqi so'ralmaydi; dastur `%LOCALAPPDATA%\Programs\AI Ustoz Pro` ga o'rnatiladi. Windows SmartScreen "Noma'lum nashriyotchi" deb ogohlantirsa — **Batafsil → Baribir ishga tushirish** (dastur raqamli imzolanmagan, qarang: CHEKLOVLAR).
 2. Birinchi ishga tushirishda **administrator hisobini** yarating: F.I.Sh., login (lotin harflari) va parol (kamida 8 belgi, harf va raqam).
 3. Bosh sahifadagi **"Ishni boshlash uchun"** ro'yxati qadamlarni ko'rsatadi.
 
@@ -87,6 +87,23 @@ AI ishlamasa (internet yo'q, kalit noto'g'ri), dastur tushunarli xabar beradi �
    - **Kompyuterda topshirish** — tanlangan o'quvchi shu kompyuterda taymer bilan topshiradi, vaqt tugasa avtomatik topshiriladi.
 6. Dastur ball, foiz va **avtomatik bahoni** hisoblaydi — bu faqat taklif. **Yakuniy** ustunida bahoni tekshiring va **Baholarni tasdiqlash** ni bosing. Avtomatik bahodan farq qilsa, sabab so'raladi va audit jurnaliga yoziladi.
 7. **Hisobot** (Excel/Word/PDF) va **Savollar tahlili** — har bir savolga necha foiz o'quvchi to'g'ri javob bergani (juda qiyin yoki noaniq savollarni aniqlash uchun).
+
+### 2.10. Dars rejimi
+Chap menyuda **Dars rejimi** — dars paytida ishlatiladigan sahifa. Bugungi joriy (yoki keyingi) dars avtomatik tanlanadi.
+- **Mavzu va materiallar** — KTR dagi mavzu, kutilayotgan natija, mavzuga biriktirilgan fayllar (taqdimot, PDF, video) va havolalar. Ikki marta bosish — ochish. **Mavzu o'tildi**, **Davomat olish** tugmalari shu yerda.
+- **Ekranda ko'rsatish (proyektor)** — alohida katta oyna: uni proyektor/ikkinchi ekranga suring, **F11** — to'liq ekran, **Esc** — chiqish. Unda mavzu, taymer, topshiriq yoki tezkor so'rov ko'rsatiladi.
+- **Taymer** — 3/5/10/15/20 daqiqa yoki o'zingiz kiritasiz; vaqt tugaganda signal beradi.
+- **Topshiriq** — matnni yozing (yoki AI yordamchidan nusxa oling) va ekranga chiqaring.
+- **Tezkor so'rov** — savol va 4 ta variant; o'quvchilar qo'l ko'taradi, siz "+" bilan sanaysiz; **Natijani ekranda ko'rsatish** — ustunli diagramma. **Jurnalga yozish** — natija dars jurnaliga qo'shiladi.
+- **Jurnal va dars yakuni** — izoh, uyga vazifa, xulosa (**AI bilan xulosa tayyorlash** — tekshirib, tahrirlab saqlaysiz). **Dars o'tildi** va **Dars hisoboti (Word/PDF)**.
+
+### 2.11. Ovozli yordamchi
+**Sozlamalar → Ovozli yordamchi**: rejimni yoqing, nutqni aniqlash usulini tanlang:
+- **OpenAI** — o'zbek tilini tushunadi; internet va OpenAI API kaliti kerak (Sozlamalar → AI xizmati da OpenAI ni tanlab kalitni saqlang).
+- **Windows** — internetsiz, lekin faqat Windows'da o'rnatilgan tillar (odatda ingliz/rus).
+**Mikrofonni sinash** va **Ovozni sinash** tugmalari bilan tekshiring.
+
+Ishlatish: AI yordamchi va Dars jurnali sahifalarida **Gapirish** tugmasi — bosing, gapiring, yana bosing; matn maydonga qo'shiladi (yuborishdan oldin tekshiring). AI javobi ostida **O'qib berish**, yuqorida **Ovozni to'xtatish** / **Qayta eshittirish**. Mikrofon faqat tugma bosilganda ishlaydi, yozuv saqlanmaydi.
 
 ## 3. Zaxira nusxa
 Dastur har kuni avtomatik nusxa oladi. **Zaxira nusxalar** bo'limida (administrator):

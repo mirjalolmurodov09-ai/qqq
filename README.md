@@ -2,17 +2,17 @@
 
 O'qituvchi uchun Windows dasturi: o'quv kalendari, dars jadvali, dars sanalarini avtomatik hisoblash, kalendar-tematik reja (KTR), davomat va hisobotlar. Barcha ma'lumotlar o'qituvchi kompyuterida (SQLite) saqlanadi, internet talab qilinmaydi.
 
-**Joriy versiya: 0.3.0** — asosiy yadro + AI yordamchi (Claude / OpenAI / lokal Ollama), Word (.docx) eksport, parol bilan shifrlangan zaxira, test va baholash moduli. Yuz orqali davomat va ovozli yordamchi keyingi versiyalarda (qarang: [docs/CHEKLOVLAR.md](docs/CHEKLOVLAR.md)).
+**Joriy versiya: 0.4.0** — asosiy yadro + AI yordamchi (Claude / OpenAI / lokal Ollama), Word (.docx) eksport, shifrlangan zaxira, test va baholash, ovozli yordamchi, dars rejimi (proyektor, taymer, tezkor so'rov). Yuz orqali davomat va lokal tarmoq keyingi bosqichlarda (qarang: [docs/CHEKLOVLAR.md](docs/CHEKLOVLAR.md)).
 
 ## Yuklab olish
 
 GitHub → **Actions** → oxirgi muvaffaqiyatli "Windows build va testlar" → **Artifacts** → `AiUstozPro-win-x64`:
 
-- `AiUstozPro-Setup-0.3.0.exe` — o'rnatish dasturi (administrator huquqi shart emas);
+- `AiUstozPro-Setup-0.4.0.exe` — o'rnatish dasturi (administrator huquqi shart emas);
 - `AiUstozPro.exe` — portativ versiya (o'rnatmasdan ishga tushadi);
 - `BUILD-REPORT.md` — versiya, sana, fayl hajmi, SHA256, test natijalari.
 
-`v*` teg qo'yilganda (`git tag v0.3.0 && git push --tags`) shu fayllar GitHub **Releases** sahifasiga ham joylanadi.
+`v*` teg qo'yilganda (`git tag v0.4.0 && git push --tags`) shu fayllar GitHub **Releases** sahifasiga ham joylanadi.
 
 ## Arxitektura
 
@@ -29,7 +29,7 @@ installer/                   — Inno Setup skripti
 .github/workflows/build.yml  — Windows CI: test → build → single-file publish → smoke test → installer → o'rnatish/o'chirish sinovi
 ```
 
-Texnologiyalar: .NET 10 (LTS), WPF, EF Core 10 (SQLite), CommunityToolkit.Mvvm 8.3, ClosedXML 0.104, Open XML SDK (Word), QuestPDF 2024.12 (Community), xUnit.
+Texnologiyalar: .NET 10 (LTS), WPF, EF Core 10 (SQLite), CommunityToolkit.Mvvm 8.3, ClosedXML 0.104, Open XML SDK (Word), NAudio (mikrofon), System.Speech (nutq), QuestPDF 2024.12 (Community), xUnit.
 
 ## Mahalliy ishlab chiqish
 
